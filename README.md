@@ -55,7 +55,7 @@ amazon-clone/
 
 1. **Clone the repository**
    ```sh
-   git clone https://github.com/<barekegnn>/Amazon-Clone.git
+   git clone https://github.com/barekegnn/Amazon-Clone.git
    cd Amazon-Clone
    ```
 
