@@ -12,6 +12,7 @@
   "dependencies": {
     "install": "^0.13.0",
     "npm": "^11.6.4",
+    "puppeteer": "^24.31.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-router-dom": "^7.9.6"

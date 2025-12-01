@@ -1,12 +1,12 @@
 import React from 'react';
 import HeroCarousel from '../components/HeroCarousel/HeroCarousel';
-import CategoryGrid from '../components/CategoryGrid/CategoryGrid';
+import HomepageContent from '../components/HomepageContent/HomepageContent';
 
 const Home = () => {
   return (
     <div className="home">
       <HeroCarousel />
-      <CategoryGrid />
+      <HomepageContent />
     </div>
   );
 };
