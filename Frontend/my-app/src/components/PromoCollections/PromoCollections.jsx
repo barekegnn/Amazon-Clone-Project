@@ -1,5 +1,4 @@
 import React from 'react';
-import './PromoCollections.css';
 
 const PROMO_COLLECTIONS = [
   {
@@ -262,25 +261,25 @@ const PROMO_COLLECTIONS = [
 
 const PromoCollections = () => {
   return (
-    <section className="promoCollections" aria-labelledby="promo-collections-heading">
-      <div className="promoCollections__inner">
-        <header className="promoCollections__header">
-          <h2 id="promo-collections-heading">More to explore</h2>
+    <section className="px-6 pb-14 md:px-4 md:pb-12" aria-labelledby="promo-collections-heading">
+      <div className="max-w-[1500px] mx-auto flex flex-col gap-5">
+        <header className="">
+          <h2 id="promo-collections-heading" className="m-0 text-2xl text-gray-900">More to explore</h2>
         </header>
 
-        <div className="promoCollections__grid">
+        <div className="grid grid-cols-auto-fill-320 gap-5 lg:grid-cols-auto-fill-280">
           {PROMO_COLLECTIONS.map((collection) => (
-            <article className="promoCollections__card" key={collection.id}>
-              {collection.title && <h3 className="promoCollections__title">{collection.title}</h3>}
+            <article className="bg-white rounded-md shadow-md p-4 pb-6 flex flex-col gap-4.5" key={collection.id}>
+              {collection.title && <h3 className="m-0 text-xl text-gray-900">{collection.title}</h3>}
 
-              <div className="promoCollections__items">
+              <div className="grid grid-cols-2 gap-y-4 gap-x-3.5">
                 {collection.items.map((item) => (
-                  <a className="promoCollections__item" href={item.href} key={item.label}>
+                  <a className="no-underline flex flex-col gap-2 text-gray-900 hover:text-amazonclone-orange hover:underline" href={item.href} key={item.label}>
                     <figure
-                      className="promoCollections__figure"
+                      className="m-0 rounded-md overflow-hidden min-h-[120px] flex items-center justify-center bg-gray-100"
                       style={item.background ? { background: item.background } : undefined}
                     >
-                      <img src={item.image} alt={item.label} loading="lazy" />
+                      <img src={item.image} alt={item.label} loading="lazy" className="w-full h-full object-cover" />
                     </figure>
                     <span>{item.label}</span>
                   </a>
@@ -288,7 +287,7 @@ const PromoCollections = () => {
               </div>
 
               {collection.ctaLabel && collection.href && (
-                <a className="promoCollections__cta" href={collection.href}>
+                <a className="self-start text-blue-700 font-semibold no-underline hover:text-amazonclone-orange hover:underline" href={collection.href}>
                   {collection.ctaLabel}
                 </a>
               )}

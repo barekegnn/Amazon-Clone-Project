@@ -1,7 +1,7 @@
 import React from 'react';
 import HolidaySpecials from '../HolidaySpecials/HolidaySpecials';
 import BooksShowcase from '../BooksShowcase/BooksShowcase';
-import './HomepageContent.css';
+import DealsPromo from '../DealsPromo/DealsPromo';
 
 const slugify = (value) =>
   value
@@ -184,44 +184,49 @@ const CARD_ROWS = [
 
 const HomepageContent = () => {
   return (
-    <section className="homepageContent" aria-labelledby="homepage-content-heading">
-      <h2 id="homepage-content-heading" className="visually-hidden">
+    <section className="px-6 pb-12" aria-labelledby="homepage-content-heading">
+      <h2 id="homepage-content-heading" className="sr-only">
         Featured Amazon collections
       </h2>
 
-      <div className="homepageContent__inner">
+      <div className="max-w-[1500px] mx-auto flex flex-col gap-6">
         {CARD_ROWS.map((row, index) => (
           <React.Fragment key={row.id}>
-            <div className="homepageContent__grid">
+            <div className="grid grid-cols-4 gap-5 lg:grid-cols-2 sm:grid-cols-1">
               {row.cards.map((card) => (
-                <article className="homepageContent__card" key={card.id}>
-                  <header className="homepageContent__cardHeader">
-                    <h3>{card.title}</h3>
-                    {card.description && <p>{card.description}</p>}
+                <article className="bg-white rounded-md shadow-md p-4 flex flex-col gap-4" key={card.id}>
+                  <header className="">
+                    <h3 className="m-0 mb-1.5 text-lg text-gray-900">{card.title}</h3>
+                    {card.description && <p className="m-0 text-sm text-gray-700">{card.description}</p>}
                   </header>
 
-                  <div className="homepageContent__itemGrid">
+                  <div className="grid grid-cols-2 gap-3.5">
                     {card.items.map((item) => (
-                      <a className="homepageContent__item" href={item.href} key={item.id}>
+                      <a className="flex flex-col gap-2 no-underline text-gray-900" href={item.href} key={item.id}>
                         <figure
-                          className="homepageContent__itemFigure"
+                          className="m-0 rounded-md min-h-[120px] flex items-center justify-center overflow-hidden"
                           style={item.background ? { background: item.background } : undefined}
                         >
-                          <img src={item.image} alt={item.title} loading="lazy" />
+                          <img src={item.image} alt={item.title} loading="lazy" className="w-full h-full object-cover" />
                         </figure>
-                        <span>{item.title}</span>
+                        <span className="text-sm">{item.title}</span>
                       </a>
                     ))}
                   </div>
 
-                  <a className="homepageContent__cta" href={card.ctaHref}>
+                  <a className="self-start text-blue-700 font-semibold no-underline hover:text-orange-700 hover:underline" href={card.ctaHref}>
                     {card.ctaLabel}
                   </a>
                 </article>
               ))}
             </div>
 
-            {index === 0 && <HolidaySpecials />}
+            {index === 0 && (
+              <>
+                <HolidaySpecials />
+                <DealsPromo />
+              </>
+            )}
           </React.Fragment>
         ))}
 

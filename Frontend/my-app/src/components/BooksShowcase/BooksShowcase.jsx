@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import './BooksShowcase.css';
 
 const createBookImagePath = (index) => `/assets/best-sellers-in-books/product_${String(index).padStart(2, '0')}.jpg`;
 
@@ -174,32 +173,32 @@ const BooksShowcase = () => {
   };
 
   return (
-    <section className="booksShowcase" aria-labelledby="books-showcase-heading">
-      <h2 id="books-showcase-heading" className="visually-hidden">
+    <section className="px-6 pb-10 md:px-4 md:pb-9" aria-labelledby="books-showcase-heading">
+      <h2 id="books-showcase-heading" className="sr-only">
         Book collections
       </h2>
-      <div className="booksShowcase__inner">
+      <div className="max-w-[1500px] mx-auto flex flex-col gap-6">
         {BOOK_ROWS.map((row) => (
-          <article className="booksShowcase__row" key={row.id} aria-labelledby={`${row.id}-title`}>
-            <header className="booksShowcase__header">
-              <h3 id={`${row.id}-title`}>{row.title}</h3>
+          <article className="p-4 pt-5 pb-2 bg-white rounded-md shadow-md" key={row.id} aria-labelledby={`${row.id}-title`}>
+            <header className="flex items-center justify-between mb-2.5">
+              <h3 id={`${row.id}-title`} className="m-0 text-xl text-gray-900">{row.title}</h3>
             </header>
-            <div className="booksShowcase__railWrapper">
+            <div className="relative flex items-center gap-3 md:mx-7">
               <button
                 type="button"
-                className="booksShowcase__control booksShowcase__control--prev"
+                className="absolute top-1/2 -translate-y-1/2 w-12 h-12 border-none bg-white shadow-lg cursor-pointer flex items-center justify-center rounded-full text-2xl text-gray-900 transition-all duration-200 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-3 focus:ring-amazonclone-orange z-10 left-0 md:w-10 md:h-10 md:text-xl"
                 aria-label={`Scroll ${row.title} books backward`}
                 onClick={() => scrollRail(row.id, 'prev')}
               >
                 ❮
               </button>
 
-              <ul className="booksShowcase__rail" ref={registerRailRef(row.id)}>
+              <ul className="grid auto-cols-[120px] grid-flow-col gap-3 overflow-x-auto py-1.5 pb-3 scroll-smooth scrollbar-hide" ref={registerRailRef(row.id)}>
                 {row.items.map((item) => (
-                  <li className="booksShowcase__item" key={item.id}>
-                    <a href={item.href} aria-label={item.title}>
-                      <figure className="booksShowcase__cover">
-                        <img src={item.image} alt={`${item.title} cover`} loading="lazy" />
+                  <li className="list-none" key={item.id}>
+                    <a href={item.href} aria-label={item.title} className="block rounded-md overflow-hidden bg-gradient-to-b from-white to-gray-100 transition-all duration-200 hover:translate-y-[-2px] hover:shadow-lg">
+                      <figure className="m-0 flex items-center justify-center bg-white h-52">
+                        <img src={item.image} alt={`${item.title} cover`} loading="lazy" className="w-auto max-w-full h-full object-contain" />
                       </figure>
                     </a>
                   </li>
@@ -208,7 +207,7 @@ const BooksShowcase = () => {
 
               <button
                 type="button"
-                className="booksShowcase__control booksShowcase__control--next"
+                className="absolute top-1/2 -translate-y-1/2 w-12 h-12 border-none bg-white shadow-lg cursor-pointer flex items-center justify-center rounded-full text-2xl text-gray-900 transition-all duration-200 hover:scale-105 hover:shadow-xl focus:outline-none focus:ring-3 focus:ring-amazonclone-orange z-10 right-0 md:w-10 md:h-10 md:text-xl"
                 aria-label={`Scroll ${row.title} books forward`}
                 onClick={() => scrollRail(row.id, 'next')}
               >
