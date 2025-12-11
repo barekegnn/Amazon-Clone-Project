@@ -14,6 +14,20 @@
         "@modelcontextprotocol/server-filesystem",
         "C:\\Users\\Admin\\Amazon-Clone-Project\\Frontend\\my-app\\public\\assets"
       ]
+    },
+    "sequential_thinking": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ]
+    },
+    "perplexity_ask": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-perplexity-ask"
+      ]
     }
   }
 }

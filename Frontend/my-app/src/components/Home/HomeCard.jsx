@@ -1,0 +1,42 @@
+import React from 'react';
+
+const HomeCard = ({ title, linkText, variant, data }) => {
+    return (
+        <div className="bg-white z-30 p-4 drop-shadow-lg flex flex-col h-[420px]">
+            <h2 className="text-xl font-bold mb-3">{title}</h2>
+            
+            <div className="flex-grow">
+                {variant === 'single' ? (
+                    <div className="w-full h-full relative cursor-pointer">
+                         <img 
+                            src={data.image} 
+                            alt={data.alt || title} 
+                            className="w-full h-full object-cover"
+                         />
+                    </div>
+                ) : (
+                    <div className="grid grid-cols-2 gap-3 h-full">
+                        {data.map((item, index) => (
+                            <div key={index} className="flex flex-col cursor-pointer">
+                                <div className="flex-grow relative overflow-hidden h-[110px] mb-1">
+                                    <img 
+                                        src={item.image} 
+                                        alt={item.label}
+                                        className="w-full h-full object-cover"
+                                     />
+                                </div>
+                                <span className="text-xs font-medium text-gray-800">{item.label}</span>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </div>
+
+            <a href="#" className="text-[#007185] hover:text-[#c7511f] hover:underline text-sm font-medium mt-4 block">
+                {linkText}
+            </a>
+        </div>
+    );
+};
+
+export default HomeCard;
