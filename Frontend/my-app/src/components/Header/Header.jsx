@@ -124,8 +124,8 @@ function Header() {
                 <div className="flex p-3">
                   <div className="w-1/2 pr-2 border-r border-gray-200">
                      <h3 className="text-base font-bold mb-1">Your Lists</h3>
-                     <a href="#" className="block py-1 text-xs text-gray-700 hover:text-amazonclone-orange hover:underline">Create a List</a>
-                     <a href="#" className="block py-1 text-xs text-gray-700 hover:text-amazonclone-orange hover:underline">Find a List or Registry</a>
+                     <Link to="#" className="block py-1 text-xs text-gray-700 hover:text-amazonclone-orange hover:underline">Create a List</Link>
+                     <Link to="#" className="block py-1 text-xs text-gray-700 hover:text-amazonclone-orange hover:underline">Find a List or Registry</Link>
                   </div>
                   <div className="w-1/2 pl-3">
                     <h3 className="text-base font-bold mb-1">Your Account</h3>
@@ -147,7 +147,7 @@ function Header() {
           </Link>
 
           {/* Cart */}
-          <Link to="/cart" className="flex items-end p-2 border border-transparent hover:border-white focus:border-white rounded-sm relative">
+          <Link to="/checkout" className="flex items-end p-2 border border-transparent hover:border-white focus:border-white rounded-sm relative">
             <div className="relative">
               <span className="absolute -top-1 left-1/2 transform -translate-x-1/2 text-[#f08804] font-bold text-base w-4 text-center">
                 {basket?.length}
@@ -211,7 +211,7 @@ function Header() {
                   </div>
                   <h3 className="text-lg font-bold px-4 pt-4 pb-2">Digital Content & Devices</h3>
                    {DEPARTMENTS.slice(0, 3).map((department) => (
-                    <Link key={department} to={`/department/${department.toLowerCase().replace(/ & /g, '-')}`} className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 flex justify-between items-center group">
+                    <Link key={department} to={`/category/${department.toLowerCase().replace(/ & /g, '-')}`} className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 flex justify-between items-center group">
                       {department}
                       <span className="text-gray-400 group-hover:text-gray-900">›</span>
                     </Link>
@@ -219,7 +219,7 @@ function Header() {
                    <div className="border-t border-gray-200 my-2"></div>
                    <h3 className="text-lg font-bold px-4 pt-2 pb-2">Shop By Department</h3>
                    {DEPARTMENTS.slice(3).map((department) => (
-                    <Link key={department} to={`/department/${department.toLowerCase().replace(/ & /g, '-')}`} className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 flex justify-between items-center group">
+                    <Link key={department} to={`/category/${department.toLowerCase().replace(/ & /g, '-')}`} className="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 flex justify-between items-center group">
                       {department}
                       <span className="text-gray-400 group-hover:text-gray-900">›</span>
                     </Link>

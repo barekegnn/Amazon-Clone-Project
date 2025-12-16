@@ -1,11 +1,14 @@
 export const initialState = {
   basket: [],
   user: null,
+  savedForLater: [],
+  promoCode: "",
+  discount: 0,
 };
 
 // Selector
 export const getCartTotal = (basket) => 
-  basket?.reduce((amount, item) => item.price + amount, 0);
+  basket?.reduce((amount, item) => (item.price * (item.quantity || 1)) + amount, 0);
 
 const cartReducer = (state, action) => {
   console.log(action);
@@ -24,13 +27,7 @@ const cartReducer = (state, action) => {
       if (index >= 0) {
         // Item exists, update quantity if the item has a quantity prop, 
         // or effectively just push another one if we treat basket as a list of items.
-        // However, "increase quantity" implies object mutation or replacement.
         // Let's assume items have a 'quantity' property.
-        // If the incoming item doesn't have quantity, we assume 1.
-        
-        // Actually, looking at typical clones, they often just allow duplicates in the array. 
-        // BUT the prompt explicitly says: "or increases the quantity if the item already exists."
-        // So I must handle quantity.
         
          newBasket[index] = {
            ...newBasket[index],
@@ -44,25 +41,19 @@ const cartReducer = (state, action) => {
       } else {
          return {
             ...state,
-            basket: [...state.basket, { ...action.item, quantity: 1 }],
+            basket: [...state.basket, { ...action.item, quantity: 1, gift: false }],
          };
       }
 
-    case "REMOVE_FROM_CART":
+    case "REMOVE_FROM_BASKET": // Renamed action type
        const indexToRemove = state.basket.findIndex(
         (basketItem) => basketItem.id === action.id
       );
       let newBasketRemove = [...state.basket];
 
       if (indexToRemove >= 0) {
-        if (newBasketRemove[indexToRemove].quantity > 1) {
-             newBasketRemove[indexToRemove] = {
-               ...newBasketRemove[indexToRemove],
-               quantity: newBasketRemove[indexToRemove].quantity - 1
-             };
-        } else {
-            newBasketRemove.splice(indexToRemove, 1);
-        }
+        // If item exists, remove it
+        newBasketRemove.splice(indexToRemove, 1);
       } else {
         console.warn(
           `Cant remove product (id: ${action.id}) as its not in basket!`
@@ -73,6 +64,58 @@ const cartReducer = (state, action) => {
         ...state,
         basket: newBasketRemove
       };
+
+    case "ADJUST_QUANTITY":
+      return {
+        ...state,
+        basket: state.basket.map((item) =>
+          item.id === action.id ? { ...item, quantity: action.quantity } : item
+        ),
+      };
+
+    case "SAVE_FOR_LATER":
+      const itemToSave = state.basket.find((item) => item.id === action.id);
+      if (!itemToSave) return state;
+
+      return {
+        ...state,
+        basket: state.basket.filter((item) => item.id !== action.id),
+        savedForLater: [...state.savedForLater, itemToSave],
+      };
+
+    case "MOVE_TO_BASKET":
+      const itemToMove = state.savedForLater.find((item) => item.id === action.id);
+      if (!itemToMove) return state;
+
+      return {
+        ...state,
+        savedForLater: state.savedForLater.filter((item) => item.id !== action.id),
+        basket: [...state.basket, itemToMove],
+      };
+
+    case "REMOVE_FROM_SAVED":
+      return {
+        ...state,
+        savedForLater: state.savedForLater.filter((item) => item.id !== action.id),
+      };
+
+    case "TOGGLE_GIFT":
+      return {
+        ...state,
+        basket: state.basket.map((item) =>
+          item.id === action.id ? { ...item, gift: !item.gift } : item
+        ),
+      };
+
+    case "APPLY_PROMO_CODE":
+      if (action.promoCode === "DISCOUNT10") {
+        return {
+          ...state,
+          promoCode: action.promoCode,
+          discount: 0.1, // 10% discount
+        };
+      }
+      return state;
 
     case "SET_USER":
       return {
