@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const HomeCard = ({ title, linkText, variant, data }) => {
     return (
@@ -7,17 +8,17 @@ const HomeCard = ({ title, linkText, variant, data }) => {
             
             <div className="flex-grow">
                 {variant === 'single' ? (
-                    <div className="w-full h-full relative cursor-pointer">
+                    <Link to={data.id ? `/product/${data.id}` : '#'} className="w-full h-full relative cursor-pointer block">
                          <img 
                             src={data.image} 
                             alt={data.alt || title} 
                             className="w-full h-full object-cover"
                          />
-                    </div>
+                    </Link>
                 ) : (
                     <div className="grid grid-cols-2 gap-3 h-full">
                         {data.map((item, index) => (
-                            <div key={index} className="flex flex-col cursor-pointer">
+                            <Link to={item.id ? `/product/${item.id}` : '#'} key={index} className="flex flex-col cursor-pointer">
                                 <div className="flex-grow relative overflow-hidden h-[110px] mb-1">
                                     <img 
                                         src={item.image} 
@@ -26,15 +27,15 @@ const HomeCard = ({ title, linkText, variant, data }) => {
                                      />
                                 </div>
                                 <span className="text-xs font-medium text-gray-800">{item.label}</span>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 )}
             </div>
 
-            <a href="#" className="text-[#007185] hover:text-[#c7511f] hover:underline text-sm font-medium mt-4 block">
+            <Link to="#" className="text-[#007185] hover:text-[#c7511f] hover:underline text-sm font-medium mt-4 block">
                 {linkText}
-            </a>
+            </Link>
         </div>
     );
 };

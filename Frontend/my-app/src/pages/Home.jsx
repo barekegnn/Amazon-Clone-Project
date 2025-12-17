@@ -68,28 +68,28 @@ const Home = () => {
         {
             id: 'r1-1', title: "Gaming Accessories", linkText: "See more", variant: "quad",
             data: [
-                { label: "Headsets", image: headsetImg },
-                { label: "Keyboards", image: keyboardImg },
-                { label: "Mice", image: mouseImg },
-                { label: "Chairs", image: chairImg }
+                { label: "Headsets", image: headsetImg, id: '9' },
+                { label: "Keyboards", image: keyboardImg, id: '11' },
+                { label: "Mice", image: mouseImg, id: '12' },
+                { label: "Chairs", image: chairImg, id: '10' }
             ]
         },
         {
             id: 'r1-2', title: "Deals in PCs", linkText: "Shop now", variant: "single",
-            data: { image: desktopImg }
+            data: { image: desktopImg, id: '13' }
         },
         {
             id: 'r1-3', title: "Refresh your space", linkText: "See more", variant: "quad",
             data: [
-                { label: "Dining", image: diningImg },
-                { label: "Home", image: decorImg },
-                { label: "Kitchen", image: kitchenImg },
-                { label: "Health", image: healthImg }
+                { label: "Dining", image: diningImg, id: '6' },
+                { label: "Home", image: decorImg, id: '7' },
+                { label: "Kitchen", image: kitchenImg, id: '8' },
+                { label: "Health", image: healthImg, id: '5' }
             ]
         },
         {
             id: 'r1-4', title: "Toys & Games", linkText: "Shop now", variant: "single",
-            data: { image: toysGamesImg }
+            data: { image: toysGamesImg, id: '1-books' }
         }
     ];
 
@@ -97,101 +97,101 @@ const Home = () => {
     const row2Cards = [
         {
              id: 'r2-1', title: "Amazon Basics", linkText: "See more", variant: "single",
-             data: { image: amazonBasicsImg }
+             data: { image: amazonBasicsImg, id: '2' }
         },
         {
              id: 'r2-2', title: "Electronics", linkText: "See more", variant: "single",
-             data: { image: electronicsImg }
+             data: { image: electronicsImg, id: '14' }
         },
         {
              id: 'r2-3', title: "Home & Kitchen", linkText: "Shop now", variant: "quad",
              data: [
-                { label: "Kitchen", image: kitchenImg },
-                { label: "Decor", image: decor2Img },
-                { label: "Bedding", image: beddingImg },
-                { label: "Towers", image: towersImg }
+                { label: "Kitchen", image: kitchenImg, id: '8' },
+                { label: "Decor", image: decor2Img, id: '7' },
+                { label: "Bedding", image: beddingImg, id: '6' },
+                { label: "Towers", image: towersImg, id: '5' }
              ]
         },
         {
              id: 'r2-4', title: "Beauty Picks", linkText: "Shop now", variant: "single",
-             data: { image: beautyImg }
+             data: { image: beautyImg, id: '15' }
         }
     ];
 
     // Row 3 Data (Product Carousel - Holiday)
     const holidayData = [
-        { id: 'h-1', title: 'Holiday Ornaments', image: ornamentsImg },
-        { id: 'h-2', title: 'Gift Sets', image: giftSetsImg },
-        { id: 'h-3', title: 'Holiday Lights', image: lightsImg },
-        { id: 'h-4', title: 'Wreaths', image: wreathsImg },
-        { id: 'h-5', title: 'Holiday Candles', image: candlesImg },
-        { id: 'h-6', title: 'Gift Wrap', image: giftWrapImg },
-        { id: 'h-7', title: 'Stockings', image: stockingsImg },
-        { id: 'h-8', title: 'Holiday Mugs', image: mugsImg },
-        { id: 'h-9', title: 'Snow Globes', image: snowGlobesImg },
-        { id: 'h-10', title: 'Holiday Treats', image: treatsImg },
+        { id: '16', title: 'Holiday Ornaments', image: ornamentsImg },
+        { id: '17', title: 'Gift Sets', image: giftSetsImg },
+        { id: '18', title: 'Holiday Lights', image: lightsImg },
+        { id: '19', title: 'Wreaths', image: wreathsImg },
+        { id: '20', title: 'Holiday Candles', image: candlesImg },
+        { id: '15', title: 'Gift Wrap', image: giftWrapImg },
+        { id: '14', title: 'Stockings', image: stockingsImg },
+        { id: '13', title: 'Holiday Mugs', image: mugsImg },
+        { id: '12', title: 'Snow Globes', image: snowGlobesImg },
+        { id: '11', title: 'Holiday Treats', image: treatsImg },
     ];
 
      // Row 4 Data (Standard Grid)
      const row4Cards = [
         {
              id: 'r4-1', title: "Easy Returns", linkText: "Learn more", variant: "single",
-             data: { image: returnsImg }
+             data: { image: returnsImg, id: '1' }
         },
         {
              id: 'r4-2', title: "Discover Fashion", linkText: "See more", variant: "quad",
              data: [
-                { label: "Jeans", image: jeansImg },
-                { label: "Tops", image: topsImg },
-                { label: "Dresses", image: dressesImg },
-                { label: "Shoes", image: shoesImg }
+                { label: "Jeans", image: jeansImg, id: '3' },
+                { label: "Tops", image: topsImg, id: '2' },
+                { label: "Dresses", image: dressesImg, id: '4' },
+                { label: "Shoes", image: shoesImg, id: '1' }
              ]
         },
         {
              id: 'r4-3', title: "Fitness Needs", linkText: "Shop now", variant: "single",
-             data: { image: fitnessImg }
+             data: { image: fitnessImg, id: '9' }
         },
         {
              id: 'r4-4', title: "Kindle E-readers", linkText: "Shop now", variant: "single",
-             data: { image: kindleImg }
+             data: { image: kindleImg, id: '11' }
         }
     ];
 
     // Row 5 Data (Product Carousel - Books)
     const booksData = [
-        { id: 'b-1', title: 'Fiction Bestseller', image: fictionImg },
-        { id: 'b-2', title: 'Mystery Novel', image: mysteryImg },
-        { id: 'b-3', title: 'Self Help', image: selfHelpImg },
-        { id: 'b-4', title: 'Cookbook', image: cookbookImg },
-        { id: 'b-5', title: 'Biography', image: biographyImg },
-        { id: 'b-6', title: 'Science Fiction', image: scifiImg },
-        { id: 'b-7', title: 'Travel Guide', image: travelImg },
-        { id: 'b-8', title: 'Business Book', image: businessImg },
-        { id: 'b-9', title: 'Art Book', image: artImg },
-        { id: 'b-10', title: 'Children\'s Book', image: childrenImg },
+        { id: 'book-1', title: 'Fiction Bestseller', image: fictionImg },
+        { id: 'book-2', title: 'Mystery Novel', image: mysteryImg },
+        { id: 'book-3', title: 'Self Help', image: selfHelpImg },
+        { id: 'book-4', title: 'Cookbook', image: cookbookImg },
+        { id: 'book-5', title: 'Biography', image: biographyImg },
+        { id: 'book-6', title: 'Science Fiction', image: scifiImg },
+        { id: 'book-7', title: 'Travel Guide', image: travelImg },
+        { id: 'book-8', title: 'Business Book', image: businessImg },
+        { id: 'book-9', title: 'Art Book', image: artImg },
+        { id: 'book-10', title: 'Children\'s Book', image: childrenImg },
     ];
 
     // Row 6 Data (Standard Grid)
     const row6Cards = [
         {
              id: 'r6-1', title: "Shop Laptops", linkText: "See more", variant: "single",
-             data: { image: laptopImg }
+             data: { image: laptopImg, id: '12' }
         },
         {
              id: 'r6-2', title: "Health & Care", linkText: "Shop now", variant: "single",
-             data: { image: healthCareImg }
+             data: { image: healthCareImg, id: '19' }
         },
         {
              id: 'r6-3', title: "Strip Lights", linkText: "Shop now", variant: "single",
-             data: { image: stripLightsImg }
+             data: { image: stripLightsImg, id: '11' }
         },
         {
              id: 'r6-4', title: "New Toys", linkText: "See more", variant: "quad",
              data: [
-                { label: "Action Figures", image: actionFiguresImg },
-                { label: "Dolls", image: dollsImg },
-                { label: "Bikes & Ride-ons", image: bikesImg },
-                { label: "Arts & Crafts", image: artsCraftsImg }
+                { label: "Action Figures", image: actionFiguresImg, id: '12' },
+                { label: "Dolls", image: dollsImg, id: '15' },
+                { label: "Bikes & Ride-ons", image: bikesImg, id: '5' },
+                { label: "Arts & Crafts", image: artsCraftsImg, id: '7' }
              ]
         }
     ];
@@ -200,23 +200,23 @@ const Home = () => {
     const row7Cards = [
         {
              id: 'r7-1', title: "Pet Supplies", linkText: "Shop now", variant: "single",
-             data: { image: petSuppliesImg }
+             data: { image: petSuppliesImg, id: '1' }
         },
         {
              id: 'r7-2', title: "Smartwatches", linkText: "Shop now", variant: "single",
-             data: { image: smartwatchImg }
+             data: { image: smartwatchImg, id: '10' }
         },
         {
              id: 'r7-3', title: "Deals on Tools", linkText: "Shop now", variant: "single",
-             data: { image: toolsImg }
+             data: { image: toolsImg, id: '9' }
         },
         {
              id: 'r7-4', title: "Gardening", linkText: "See more", variant: "quad",
              data: [
-                { label: "Outdoor Decor", image: outdoorDecorImg },
-                { label: "Furniture", image: furnitureImg },
-                { label: "Lawn Care", image: lawnCareImg },
-                { label: "Gardening", image: gardeningImg }
+                { label: "Outdoor Decor", image: outdoorDecorImg, id: '6' },
+                { label: "Furniture", image: furnitureImg, id: '7' },
+                { label: "Lawn Care", image: lawnCareImg, id: '8' },
+                { label: "Gardening", image: gardeningImg, id: '5' }
              ]
         }
     ];

@@ -6,9 +6,10 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Checkout from './pages/Checkout';
-import ProductDetail from './pages/ProductDetail';
+import ProductDetailPage from './pages/ProductDetailPage';
 import CategoryPage from './pages/CategoryPage';
 import Placeholder from './pages/Placeholder';
+import SearchResults from './pages/SearchResults';
 
 const Layout = () => {
   return (
@@ -30,8 +31,9 @@ const App = () => {
           <Route index element={<Home />} />
           <Route path="checkout" element={<Checkout />} />
           <Route path="register" element={<Register />} />
-          <Route path="product/:id" element={<ProductDetail />} />
+          <Route path="product/:id" element={<ProductDetailPage />} />
           <Route path="category/*" element={<CategoryPage />} />
+          <Route path="search" element={<SearchResults />} />
           
           {/* Specific Placeholder Routes for Header/Nav Links */}
           <Route path="orders" element={<Placeholder pageTitle="Your Orders" />} />

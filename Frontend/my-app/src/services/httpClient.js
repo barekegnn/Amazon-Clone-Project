@@ -1,4 +1,4 @@
-const DEFAULT_TIMEOUT_MS = 10000;
+const DEFAULT_TIMEOUT_MS = 30000;
 
 // Thin fetch wrapper for external providers (e.g., fakestore, dummyjson).
 // Centralizes base URL, headers, and error handling so higher layers stay focused on domain logic.
