@@ -1,10 +1,23 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Search, X } from "lucide-react";
-import { useCart } from "../../context/CartContext";
+import { useCart } from "../../contexts/CartContext";
 import { useDebounce } from "../../hooks/useDebounce";
 import { searchProviderProducts } from "../../services/catalogApi";
-import type { HeaderProps, SearchSuggestion } from "./header.types";
+import { ThemeToggle } from "../common/ThemeToggle";
+
+interface HeaderProps {
+    // definedprops
+}
+
+type SearchSuggestionKind = "product" | "category" | "query";
+
+interface SearchSuggestion {
+  id: string;
+  label: string;
+  kind: SearchSuggestionKind;
+  href: string;
+}
 
 const DEPARTMENTS = [
   "Books",
@@ -41,9 +54,8 @@ function Header(_props: HeaderProps) {
   const [isSuggestionsLoading, setSuggestionsLoading] = useState(false);
 
   const navigate = useNavigate();
-  const { state } = useCart();
-  const { basket } = state as { basket?: unknown[] };
-
+  const { totalItems } = useCart();
+  
   const dropdownRootRef = useRef<HTMLDivElement | null>(null);
   const lastRequestedQueryRef = useRef<string>("");
 
@@ -438,6 +450,9 @@ function Header(_props: HeaderProps) {
             <span className="text-sm font-bold">&amp; Orders</span>
           </Link>
 
+          {/* Theme Toggle */}
+          <ThemeToggle />
+
           {/* Cart */}
           <Link
             to="/checkout"
@@ -445,7 +460,7 @@ function Header(_props: HeaderProps) {
           >
             <div className="relative">
               <span className="absolute -top-1 left-1/2 transform -translate-x-1/2 text-[#f08804] font-bold text-base w-4 text-center">
-                {Array.isArray(basket) ? basket.length : 0}
+                {totalItems}
               </span>
               <svg
                 className="h-8 w-8 text-white"

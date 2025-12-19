@@ -2,6 +2,7 @@ import React from 'react';
 import HeroCarousel from '../components/Home/HeroCarousel';
 import HomeCard from '../components/Home/HomeCard';
 import ProductCarouselRow from '../components/Home/ProductCarouselRow';
+import { RecentlyViewed } from '../components/product/RecentlyViewed';
 
 // Import all product images
 import headsetImg from '../assets/products/gaming/headset.jpg';
@@ -268,8 +269,13 @@ const Home = () => {
             ))}
          </div>
 
-      </div>
-    </div>
+          {/* Recently Viewed Products */}
+          <div className="px-4">
+            <RecentlyViewed />
+          </div>
+
+       </div>
+     </div>
   );
 };
 

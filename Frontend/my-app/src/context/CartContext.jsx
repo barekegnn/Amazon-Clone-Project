@@ -6,7 +6,23 @@ export const CartContext = createContext();
 
 // Wrap our app and provide the Data layer
 export const CartProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(cartReducer, initialState);
+    // Initialize from localStorage if available
+    const initializer = (initialValue) => {
+        try {
+            const localData = localStorage.getItem("amazonCloneCart");
+            return localData ? JSON.parse(localData) : initialValue;
+        } catch (error) {
+            console.error("Error reading from localStorage", error);
+            return initialValue;
+        }
+    };
+
+    const [state, dispatch] = useReducer(cartReducer, initialState, initializer);
+
+    // Save to localStorage whenever state changes
+    React.useEffect(() => {
+        localStorage.setItem("amazonCloneCart", JSON.stringify(state));
+    }, [state]);
 
     return (
         <CartContext.Provider value={{ state, dispatch }}>

@@ -1,64 +1,76 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { useProduct } from '../hooks/useProduct';
-import ProductGallery from '../components/product/ProductGallery';
-import ProductInfo from '../components/product/ProductInfo';
-import ProductTabs from '../components/product/ProductTabs';
-import RelatedProducts from '../components/product/RelatedProducts';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useProductData } from '../hooks/useProductData';
+import ProductDetailSkeleton from '../components/product/ProductDetailSkeleton';
+import ProductDetail from '../components/product/ProductDetail';
+import { Breadcrumb, BreadcrumbItem } from '../components/common/Breadcrumb';
+import { ProductRecommendations } from '../components/product/ProductRecommendations';
+import { RecentlyViewed } from '../components/product/RecentlyViewed';
+import { addToRecentlyViewed } from '../utils/productTracking';
+import { capitalizeWords } from '../utils/formatters';
 
 const ProductDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  // @ts-ignore
-  const { product, loading, error } = useProduct(id);
+  const productId = !isNaN(Number(id)) ? Number(id) : (id || '');
+  
+  const { product, isLoading, error, source } = useProductData(productId);
+  
+  // Track product view
+  useEffect(() => {
+    if (product) {
+      addToRecentlyViewed({
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        image: product.image,
+        category: product.category || 'products'
+      });
+    }
+  }, [product]);
+  
+  // Debug mode logs
+  useEffect(() => {
+    if (product && source === 'api') {
+      console.warn('⚠️ Product detail fetched fresh from API - cache miss');
+    } else if (product && source === 'route') {
+      console.log('✅ Product detail from route state - instant load');
+    }
+    if (source) {
+       console.log(`Product loaded from: ${source}`);
+    }
+  }, [product, source]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amazonclone-orange"></div>
-      </div>
-    );
-  }
-
-  if (error || !product) {
-    return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-white text-center p-4">
-            <h2 className="text-2xl font-bold mb-2">Product Not Found</h2>
-            <p className="mb-4">We couldn't find the product you're looking for.</p>
-            <Link to="/" className="text-blue-600 hover:underline">Return to Home</Link>
-        </div>
-    );
-  }
+  if (isLoading) return <ProductDetailSkeleton />;
+  if (error) return <div className="container mx-auto px-4 py-8">Error loading product</div>;
+  if (!product) return <div className="container mx-auto px-4 py-8">Product not found</div>;
+  
+  // Build breadcrumb items
+  const breadcrumbItems: BreadcrumbItem[] = [
+    { label: 'Home', href: '/' },
+    { label: capitalizeWords(product.category || 'Products'), href: `/category/${product.category || 'all'}` },
+    { label: product.title, href: `/product/${product.id}` }
+  ];
 
   return (
-    <div className="bg-white min-h-screen font-amazonember">
-        {/* Breadcrumb */}
-        <div className="bg-[#f0f2f2] px-4 py-2 text-xs text-[#565959] mb-4">
-            <div className="max-w-7xl mx-auto flex items-center gap-1">
-                <Link to="/" className="hover:underline hover:text-[#C7511F]">Home</Link>
-                <span>›</span>
-                <Link to={`/category/${product.category}`} className="hover:underline hover:text-[#C7511F] capitalize">
-                    {product.category}
-                </Link>
-                <span>›</span>
-                <span className="text-[#C7511F] font-bold line-clamp-1 max-w-[200px]">{product.title}</span>
-            </div>
-        </div>
+    <div className="bg-white">
+      <div className="container mx-auto px-4 py-4">
+        <Breadcrumb items={breadcrumbItems} />
+      </div>
+      
+      <div className="container mx-auto px-4 pb-8">
+        <ProductDetail product={product} />
+      </div>
 
-        <div className="max-w-7xl mx-auto px-4 py-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                {/* Left column - Product images */}
-                <ProductGallery product={product} />
-                
-                {/* Right column - Product info */}
-                <ProductInfo product={product} />
-            </div>
-            
-            {/* Product tabs */}
-            <ProductTabs product={product} />
-            
-            {/* Related products */}
-            <RelatedProducts category={product.category} currentProductId={product.id} />
-        </div>
+      <div className="container mx-auto px-4 pb-8">
+        <ProductRecommendations 
+          currentProduct={product}
+          category={product.category}
+        />
+      </div>
+
+      <div className="container mx-auto px-4 pb-8">
+        <RecentlyViewed />
+      </div>
     </div>
   );
 };

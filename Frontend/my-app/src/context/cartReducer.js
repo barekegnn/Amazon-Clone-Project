@@ -10,6 +10,9 @@ export const initialState = {
 export const getCartTotal = (basket) => 
   basket?.reduce((amount, item) => (item.price * (item.quantity || 1)) + amount, 0);
 
+export const getCartQuantity = (basket) =>
+  basket?.reduce((count, item) => (item.quantity || 1) + count, 0);
+
 const cartReducer = (state, action) => {
   console.log(action);
   switch (action.type) {
@@ -23,27 +26,22 @@ const cartReducer = (state, action) => {
       );
       
       let newBasket = [...state.basket];
+      const quantityToAdd = action.item.quantity || 1;
 
       if (index >= 0) {
-        // Item exists, update quantity if the item has a quantity prop, 
-        // or effectively just push another one if we treat basket as a list of items.
-        // Let's assume items have a 'quantity' property.
-        
+        // Item exists, update quantity
          newBasket[index] = {
            ...newBasket[index],
-           quantity: (newBasket[index].quantity || 1) + 1
+           quantity: (newBasket[index].quantity || 1) + quantityToAdd
          };
-         return {
-            ...state,
-            basket: newBasket,
-         };
-
       } else {
-         return {
-            ...state,
-            basket: [...state.basket, { ...action.item, quantity: 1, gift: false }],
-         };
+         newBasket = [...state.basket, { ...action.item, quantity: quantityToAdd, gift: false }];
       }
+
+      return {
+        ...state,
+        basket: newBasket,
+      };
 
     case "REMOVE_FROM_BASKET": // Renamed action type
        const indexToRemove = state.basket.findIndex(

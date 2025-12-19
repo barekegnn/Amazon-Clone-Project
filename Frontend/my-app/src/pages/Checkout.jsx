@@ -1,73 +1,66 @@
 import React, { useState } from 'react';
-import { useCart } from '../context/CartContext';
-import { getCartTotal } from '../context/cartReducer';
+import { useCart } from '../contexts/CartContext';
 import RecommendedProducts from '../components/RecommendedProducts/RecommendedProducts';
-// import ProductCard from '../components/ProductCard/ProductCard'; // ProductCard is not used here
+import { EmptyState } from '../components/common/EmptyState';
+import { CheckoutProgress } from '../components/checkout/CheckoutProgress';
 
 const Checkout = () => {
-  const { state, dispatch } = useCart();
-  const { basket, savedForLater, promoCode, discount } = state;
+  const { 
+    items, 
+    savedForLater, 
+    totalItems, 
+    totalPrice, 
+    removeFromCart, 
+    updateQuantity, 
+    saveForLater: saveForLaterAction, 
+    moveToBasket: moveToBasketAction,
+    toggleGift: toggleGiftAction,
+    removeFromSaved
+  } = useCart();
+
   const [promoCodeInput, setPromoCodeInput] = useState("");
+  const [discount, setDiscount] = useState(0);
 
   const handleApplyPromoCode = () => {
-    dispatch({
-      type: "APPLY_PROMO_CODE",
-      promoCode: promoCodeInput,
-    });
-  };
-
-  const removeFromCart = (id) => {
-    dispatch({
-      type: "REMOVE_FROM_BASKET",
-      id: id,
-    });
+    // Basic promo code logic (client-side for demo)
+    if (promoCodeInput.toLowerCase() === 'save10') {
+      setDiscount(0.1);
+    } else {
+      setDiscount(0);
+    }
   };
 
   const handleQuantityChange = (id, quantity) => {
-    dispatch({
-      type: "ADJUST_QUANTITY",
-      id: id,
-      quantity: quantity,
-    });
+    updateQuantity(id, quantity);
   };
-
-  const saveForLater = (id) => {
-    dispatch({
-      type: "SAVE_FOR_LATER",
-      id: id,
-    });
-  };
-
-  const moveToBasket = (id) => {
-    dispatch({
-      type: "MOVE_TO_BASKET",
-      id: id,
-    });
-  };
-
+  
   const handleToggleGift = (id) => {
-    dispatch({
-      type: "TOGGLE_GIFT",
-      id: id,
-    });
+     toggleGiftAction(id);
+  };
+
+  const calculateTotal = () => {
+      return totalPrice * (1 - discount);
+  };
+  
+  const calculateDiscountAmount = () => {
+      return totalPrice * discount;
   };
 
   return (
-    <div className="cart-page bg-gray-100 min-h-screen py-6">
-      <div className="max-w-5xl mx-auto px-4">
-        <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
+    <>
+      <CheckoutProgress currentStep={1} />
+      <div className="cart-page bg-gray-100 min-h-screen py-6">
+        <div className="max-w-5xl mx-auto px-4">
+          <h1 className="text-2xl font-bold mb-6">Shopping Cart</h1>
 
-        {basket?.length === 0 ? (
-          <div className="bg-white p-6 rounded-lg shadow-md text-center">
-            <h2 className="text-xl font-semibold text-gray-800">Your Amazon Cart is empty.</h2>
-            <p className="text-gray-600 mt-2">Check your Saved for later items below or <a href="/" className="text-blue-600 hover:underline">continue shopping</a>.</p>
-          </div>
-        ) : (
+          {items.length === 0 ? (
+            <EmptyState type="cart" />
+          ) : (
           <div className="flex flex-col lg:flex-row gap-6">
             <div className="lg:w-3/4">
               <div className="bg-white p-6 rounded-lg shadow-md">
                 <h2 className="text-xl font-semibold text-gray-800 mb-4">Items in your cart</h2>
-                {basket.map((item) => (
+                {items.map((item) => (
                   <div key={item.id} className="flex items-center border-b border-gray-200 py-4 last:border-b-0">
                     <img src={item.image} alt={item.title} className="w-24 h-24 object-contain mr-4" />
                     <div className="flex-1">
@@ -77,7 +70,7 @@ const Checkout = () => {
                         <input
                           type="checkbox"
                           id={`gift-${item.id}`}
-                          checked={item.gift}
+                          checked={item.gift || false}
                           onChange={() => handleToggleGift(item.id)}
                           className="mr-2"
                         />
@@ -104,7 +97,7 @@ const Checkout = () => {
                           Remove
                         </button>
                         <button
-                          onClick={() => saveForLater(item.id)}
+                          onClick={() => saveForLaterAction(item.id)}
                           className="text-blue-600 text-sm ml-4 hover:underline focus:outline-none"
                         >
                           Save for Later
@@ -115,18 +108,18 @@ const Checkout = () => {
                 ))}
 
                 <div className="flex justify-between mb-2 mt-4">
-                  <span className="text-gray-700">Subtotal ({basket.length} items):</span>
-                  <span className="font-semibold">${getCartTotal(basket).toFixed(2)}</span>
+                  <span className="text-gray-700">Subtotal ({totalItems} items):</span>
+                  <span className="font-semibold">${totalPrice.toFixed(2)}</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between mb-2">
                     <span className="text-gray-700">Discount:</span>
-                    <span className="font-semibold">-${(getCartTotal(basket) * discount).toFixed(2)}</span>
+                    <span className="font-semibold">-${calculateDiscountAmount().toFixed(2)}</span>
                   </div>
                 )}
                 <div className="flex justify-between font-bold text-lg mb-4">
                   <span>Total:</span>
-                  <span>${(getCartTotal(basket) * (1 - discount)).toFixed(2)}</span>
+                  <span>${calculateTotal().toFixed(2)}</span>
                 </div>
                 <div className="flex items-center mb-4">
                   <input
@@ -155,11 +148,11 @@ const Checkout = () => {
           </div>
         )}
 
-        {state.savedForLater?.length > 0 && (
+        {savedForLater?.length > 0 && (
           <div className="mt-8">
             <div className="bg-white p-6 rounded-lg shadow-md">
               <h2 className="text-xl font-semibold text-gray-800 mb-4">Saved for Later</h2>
-              {state.savedForLater.map((item) => (
+              {savedForLater.map((item) => (
                 <div key={item.id} className="flex items-center border-b border-gray-200 py-4 last:border-b-0">
                   <img src={item.image} alt={item.title} className="w-24 h-24 object-contain mr-4" />
                   <div className="flex-1">
@@ -167,13 +160,13 @@ const Checkout = () => {
                     <p className="text-sm text-gray-600">Price: ${item.price?.toFixed(2)}</p>
                     <div className="flex items-center mt-2">
                       <button
-                        onClick={() => moveToBasket(item.id)}
+                        onClick={() => moveToBasketAction(item.id)}
                         className="text-blue-600 text-sm hover:underline focus:outline-none"
                       >
                         Move to Basket
                       </button>
                       <button
-                        onClick={() => dispatch({ type: 'REMOVE_FROM_SAVED', id: item.id })}
+                        onClick={() => removeFromSaved(item.id)}
                         className="text-red-600 text-sm ml-4 hover:underline focus:outline-none"
                       >
                         Delete
@@ -189,6 +182,7 @@ const Checkout = () => {
         <RecommendedProducts />
       </div>
     </div>
+    </>
   );
 };
 

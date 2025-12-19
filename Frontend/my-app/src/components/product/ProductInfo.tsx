@@ -1,39 +1,15 @@
+
 import React, { useState } from 'react';
 import { Product } from '../../types/product';
-import { useCart } from '../../context/CartContext';
 import { Star, Truck, ShieldCheck, RefreshCw } from 'lucide-react';
+import { AddToCartButton } from "../common/AddToCartButton";
 
 interface ProductInfoProps {
   product: Product;
 }
 
 const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
-  const { dispatch } = useCart();
   const [quantity, setQuantity] = useState(1);
-
-  const addToCart = () => {
-    dispatch({
-      type: 'ADD_TO_CART',
-      item: {
-        id: product.id,
-        title: product.title,
-        image: product.image,
-        price: product.price,
-        rating: product.rating?.rate || 0,
-        // The reducer might expect quantity logic to be handled inside or passed
-        // Based on the reducer code: it adds with quantity: 1 or increments. 
-        // Ideally we pass the quantity, but standard reducer implementation in this project 
-        // seemed to increment by 1. I'll dispatch multiple times or update reducer later 
-        // if needed. For now, let's assume standard behavior.
-        // Actually, looking at the reducer, it adds `{...action.item, quantity: 1}` if new.
-        // It doesn't seem to support adding N quantity at once easily without `ADJUST_QUANTITY` after.
-        // I will just add one for now to be safe with existing logic, or loop.
-      },
-    });
-    // If quantity > 1, we might ideally want to dispatch adjust_quantity.
-    // simpler to just loop for this clone demo or ignore quantity selector for the "Add" action's initial payload
-    // if the existing reducer is simple.
-  };
   
   // Fake delivery date
   const deliveryDate = new Date();
@@ -65,9 +41,9 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
 
       {/* Price */}
       <div>
-          <div className="text-sm text-gray-500">List Price: <span className="line-through">${(product.price * 1.2).toFixed(2)}</span></div>
+          <div className="text-sm text-gray-500">List Price: <span className="line-through">${((product.price || 0) * 1.2).toFixed(2)}</span></div>
           <div className="flex items-baseline gap-2">
-             <span className="text-2xl font-medium text-gray-900">${product.price.toFixed(2)}</span>
+             <span className="text-2xl font-medium text-gray-900">${(product.price || 0).toFixed(2)}</span>
              <span className="text-sm font-semibold text-red-700">-20%</span>
           </div>
           <div className="text-sm text-gray-500 mt-1">
@@ -105,7 +81,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
 
       {/* Buying Controls (Right sidebar style usually, but inline here for simplicity as requested) */}
       <div className="mt-4 p-4 border border-gray-300 rounded-lg bg-gray-50 max-w-sm">
-          <div className="text-xl font-bold text-[#B12704] mb-2">${product.price.toFixed(2)}</div>
+          <div className="text-xl font-bold text-[#B12704] mb-2">${(product.price || 0).toFixed(2)}</div>
           <div className="text-sm text-gray-600 mb-2">
               <span className="text-[#007600] font-bold">In Stock</span>
           </div>
@@ -128,12 +104,12 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
                   </select>
               </div>
 
-              <button 
-                onClick={addToCart}
+              <AddToCartButton 
+                product={product} 
+                quantity={quantity}
                 className="w-full py-2 rounded-full bg-[#FFD814] hover:bg-[#F7CA00] border border-[#FCD200] text-sm text-black shadow-sm"
-              >
-                  Add to Cart
-              </button>
+              />
+
               <button className="w-full py-2 rounded-full bg-[#FFA41C] hover:bg-[#FA8900] border border-[#FF8F00] text-sm text-black shadow-sm">
                   Buy Now
               </button>

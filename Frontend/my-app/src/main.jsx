@@ -2,18 +2,33 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import './index.css';
-import { CartProvider } from './context/CartContext';
+import { CartProvider } from './contexts/CartContext';
+import { ThemeProvider } from './contexts/ThemeContext';
+import { ToastProvider } from './components/common/Toast';
 import ErrorBoundary from './ErrorBoundary';
 import App from './App';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ProductCacheProvider } from './contexts/ProductCacheContext';
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <ErrorBoundary>
-      <CartProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </CartProvider>
+      <ThemeProvider>
+        <ToastProvider>
+          <CartProvider>
+            <QueryClientProvider client={queryClient}>
+              <ProductCacheProvider>
+                <BrowserRouter>
+                  <App />
+                </BrowserRouter>
+              </ProductCacheProvider>
+            </QueryClientProvider>
+          </CartProvider>
+        </ToastProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   </StrictMode>,
 );
+
