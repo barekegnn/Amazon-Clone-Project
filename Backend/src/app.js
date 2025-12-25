@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 
 import { errorHandler, notFoundHandler } from './middlewares/error.middleware.js';
 import authRoutes from './routes/auth.routes.js';
+import { decodeAuthToken } from './middlewares/auth.middleware.js';
 
 // Load environment variables
 dotenv.config();
@@ -18,6 +19,9 @@ app.use(cors({ origin: process.env.CLIENT_ORIGIN ?? '*', credentials: true }));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+
+// Decode Firebase ID tokens when provided
+app.use(decodeAuthToken);
 
 // Health check endpoint
 app.get('/health', (req, res) => {

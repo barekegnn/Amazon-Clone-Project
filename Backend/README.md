@@ -67,18 +67,40 @@ Backend server for the Amazon Clone project using Firebase for authentication an
 Backend/
 ├── src/
 │   ├── config/
-│   │   └── firebase.config.js    # Firebase initialization
+│   │   ├── firebase.config.js        # Firebase client SDK initialization
+│   │   └── firebaseAdmin.config.js   # Firebase Admin SDK initialization
+│   ├── controllers/
+│   │   └── auth.controller.js        # Auth route handlers
+│   ├── routes/
+│   │   └── auth.routes.js            # /api/auth endpoints
+│   ├── middlewares/
+│   │   ├── auth.middleware.js        # Token decoding & RBAC helpers
+│   │   └── error.middleware.js       # 404 & error handling
 │   ├── services/
-│   │   ├── auth.service.js       # Authentication operations
-│   │   └── firestore.service.js  # Database operations
-│   ├── controllers/              # Route controllers
-│   ├── routes/                   # API routes
-│   ├── middlewares/              # Custom middlewares
-│   └── app.js                    # Express app setup
-├── .env                          # Environment variables (DO NOT COMMIT)
-├── .env.example                  # Environment template
+│   │   ├── auth.service.js           # Firebase authentication operations
+│   │   └── firestore.service.js      # Firestore data helpers
+│   ├── utils/
+│   │   ├── apiError.js               # Custom error class
+│   │   └── asyncHandler.js           # Async wrapper for controllers
+│   ├── app.js                        # Express app configuration
+│   └── server.js                     # HTTP server bootstrap
+├── tests/
+│   └── auth.routes.test.js           # Supertest coverage for auth routes
+├── .env                              # Environment variables (DO NOT COMMIT)
+├── .env.example                      # Environment template
 └── package.json
 ```
+
+### Environment variables
+
+In addition to the Firebase client configuration, the backend now requires a service-account credential for Firebase Admin. Update `.env` with the following keys (already demonstrated in `.env.example`):
+
+```
+FIREBASE_ADMIN_CLIENT_EMAIL=your_service_account_email@project.iam.gserviceaccount.com
+FIREBASE_ADMIN_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+```
+
+> ⚠️ When copying the private key, ensure newline characters are escaped as `\n`.
 
 ## 🔐 Firebase Services
 
@@ -143,10 +165,17 @@ await addProduct({
 ## 🚦 Running the Server
 
 ```bash
+# install dependencies
+npm install
+
+# run the development server
 npm start
+
+# execute automated tests
+npm test
 ```
 
-The server will start on `http://localhost:5000` (or the PORT specified in `.env`)
+The server will start on `http://localhost:5000` (or the PORT specified in `.env`).
 
 ## ⚠️ Security Notes
 
@@ -155,14 +184,24 @@ The server will start on `http://localhost:5000` (or the PORT specified in `.env
 - Use Firebase Security Rules in production
 - Enable Firebase App Check for additional security
 
+## 🔐 Authentication API
+
+Base path: `/api/auth`
+
+| Method | Path             | Description                          | Auth required |
+|--------|------------------|--------------------------------------|---------------|
+| POST   | `/register`       | Register a user (email, password, optional displayName) | No |
+| POST   | `/login`          | Login with email/password            | No |
+| POST   | `/logout`         | Sign out current user                | Yes (Firebase ID token) |
+| POST   | `/forgot-password`| Send password reset email            | No |
+
+All endpoints return JSON with the shape `{ success, message, data? }`. Validation errors respond with `{ success: false, message: 'Validation failed', errors }`.
+
 ## 📝 Next Steps
 
-1. Create Express routes that use the Firebase services
-2. Add authentication middleware for protected routes
-3. Implement product API endpoints
-4. Add error handling and validation
-5. Set up Firebase Security Rules
-6. Deploy to Firebase Functions or your preferred hosting
+1. Implement product and order API endpoints.
+2. Extend route protection with role-based authorization for admin features.
+3. Configure Firebase Security Rules and deployment pipeline.
 
 ## 🔗 Useful Links
 

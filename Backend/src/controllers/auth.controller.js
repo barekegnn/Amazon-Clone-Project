@@ -1,4 +1,4 @@
-import { registerUser, loginUser, logoutUser, resetPassword } from '../services/auth.service.js';
+import authService from '../services/auth.service.js';
 import { ApiError } from '../utils/apiError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
@@ -26,7 +26,7 @@ const mapFirebaseAuthError = (code, fallbackMessage) => {
 export const register = asyncHandler(async (req, res) => {
   const { email, password, displayName } = req.validatedBody ?? req.body;
 
-  const result = await registerUser(email, password, displayName);
+  const result = await authService.registerUser(email, password, displayName);
 
   if (!result.success) {
     const { status, message } = mapFirebaseAuthError(result.code, result.error);
@@ -45,7 +45,7 @@ export const register = asyncHandler(async (req, res) => {
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.validatedBody ?? req.body;
 
-  const result = await loginUser(email, password);
+  const result = await authService.loginUser(email, password);
 
   if (!result.success) {
     const { status, message } = mapFirebaseAuthError(result.code, result.error);
@@ -62,7 +62,7 @@ export const login = asyncHandler(async (req, res) => {
 });
 
 export const logout = asyncHandler(async (req, res) => {
-  const result = await logoutUser();
+  const result = await authService.logoutUser();
 
   if (!result.success) {
     throw new ApiError(500, result.error ?? 'Failed to sign out.');
@@ -77,7 +77,7 @@ export const logout = asyncHandler(async (req, res) => {
 export const sendPasswordReset = asyncHandler(async (req, res) => {
   const { email } = req.validatedBody ?? req.body;
 
-  const result = await resetPassword(email);
+  const result = await authService.resetPassword(email);
 
   if (!result.success) {
     const { status, message } = mapFirebaseAuthError(result.code, result.error);
