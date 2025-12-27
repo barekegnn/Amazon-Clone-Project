@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { resolveCategoryPath } from "../routing/categoryPathResolver";
 import {
-  fetchProviderCategories,
-  fetchProviderCategoryProducts,
-} from "../../../services/catalogApi";
+  getCategories,
+  getProducts,
+} from "../../../services/productApi";
 import { categoryService } from "../../../services/CategoryService";
 
 // Orchestrates category URL resolution + IO against the primary provider,
@@ -41,13 +41,14 @@ export const useCategoryRoute = () => {
 
       try {
         // Index is used to drive navigation UIs (left rail, menus) and to validate slugs.
-        const categoriesIndex = await fetchProviderCategories();
+        const categoriesIndex = await getCategories();
 
         let products = [];
 
         if (resolvedPath.providerCategorySlug) {
-          products = await fetchProviderCategoryProducts({
-            providerCategorySlug: resolvedPath.providerCategorySlug,
+          products = await getProducts({
+            category: resolvedPath.providerCategorySlug,
+            limit: 50
           });
         }
 

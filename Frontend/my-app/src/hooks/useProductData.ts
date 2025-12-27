@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { useLocation } from 'react-router-dom';
 import { useProductCache } from '../contexts/ProductCacheContext';
 import { fetchProduct } from '../services/fakeStoreAPI';
+import { getProductById as fetchBackendProduct } from '../services/productApi';
 
 export const useProductData = (productId: number | string) => {
   const location = useLocation();
@@ -16,7 +17,14 @@ export const useProductData = (productId: number | string) => {
   // 3. Fallback to API call
   const { data: apiProduct, isLoading, error } = useQuery({
     queryKey: ['product', productId],
-    queryFn: () => fetchProduct(productId),
+    queryFn: async () => {
+      // If ID is number, use legacy FakeStore (or fallback)
+      if (typeof productId === 'number') {
+        return fetchProduct(productId);
+      }
+      // If ID is string, use Backend
+      return fetchBackendProduct(productId);
+    },
     enabled: !routeProduct && !cachedProduct, // Only fetch if we don't have data
     staleTime: 2 * 60 * 1000, // 2 minutes
   });

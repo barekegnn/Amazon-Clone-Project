@@ -3,8 +3,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { Search, X } from "lucide-react";
 import { useCart } from "../../contexts/CartContext";
 import { useDebounce } from "../../hooks/useDebounce";
-import { searchProviderProducts } from "../../services/catalogApi";
+import { getProducts } from "../../services/productApi";
 import { ThemeToggle } from "../common/ThemeToggle";
+import { useAuth } from "../../context/AuthContextAPI"; // Using Backend API
 
 interface HeaderProps {
     // definedprops
@@ -55,6 +56,7 @@ function Header(_props: HeaderProps) {
 
   const navigate = useNavigate();
   const { totalItems } = useCart();
+  const { user, logout } = useAuth();
   
   const dropdownRootRef = useRef<HTMLDivElement | null>(null);
   const lastRequestedQueryRef = useRef<string>("");
@@ -109,12 +111,12 @@ function Header(_props: HeaderProps) {
     async function run() {
       setSuggestionsLoading(true);
       try {
-        const payload = await searchProviderProducts({ query: q, limit: 6 });
+        const products = await getProducts({ search: q, limit: 6 });
         if (!isActive) return;
         // Ignore out-of-order responses.
         if (lastRequestedQueryRef.current !== q) return;
 
-        const productSuggestions: SearchSuggestion[] = (payload.products ?? [])
+        const productSuggestions: SearchSuggestion[] = (products ?? [])
           .slice(0, 6)
           .map((p) => ({
             id: String(p.id),
@@ -356,10 +358,12 @@ function Header(_props: HeaderProps) {
             onMouseLeave={() => setAccountDropdownOpen(false)}
           >
             <Link
-              to="/login"
+              to={user ? "/account" : "/login"}
               className="flex flex-col p-2 border border-transparent hover:border-white focus:border-white rounded-sm leading-tight"
             >
-              <span className="text-xs text-gray-200">Hello, sign in</span>
+              <span className="text-xs text-gray-200">
+                Hello, {user ? user.displayName || 'User' : 'sign in'}
+              </span>
               <div className="flex items-center gap-0.5">
                 <span className="text-sm font-bold">Account &amp; Lists</span>
                 <span className="text-[10px] text-gray-400 mt-1">▾</span>
@@ -369,23 +373,42 @@ function Header(_props: HeaderProps) {
             {isAccountDropdownOpen && (
               <div className="absolute top-full right-0 bg-white shadow-lg rounded-sm w-60 py-2 border border-gray-200 z-20 text-gray-900 mt-1">
                 <div className="absolute -top-1.5 right-8 w-3 h-3 bg-white border-l border-t border-gray-200 transform rotate-45" />
-                <div className="flex flex-col items-center p-3 bg-gray-50 border-b border-gray-200">
-                  <Link
-                    to="/login"
-                    className="bg-[#FFD814] w-48 py-1.5 rounded-md text-sm font-normal text-center shadow-sm hover:bg-[#F7CA00]"
-                  >
-                    Sign in
-                  </Link>
-                  <p className="text-[11px] mt-1.5 text-gray-600">
-                    New customer?{" "}
+                
+                {!user ? (
+                  <div className="flex flex-col items-center p-3 bg-gray-50 border-b border-gray-200">
                     <Link
-                      to="/register"
-                      className="text-blue-600 hover:text-orange-700 hover:underline"
+                      to="/login"
+                      className="bg-[#FFD814] w-48 py-1.5 rounded-md text-sm font-normal text-center shadow-sm hover:bg-[#F7CA00]"
                     >
-                      Start here.
+                      Sign in
                     </Link>
-                  </p>
-                </div>
+                    <p className="text-[11px] mt-1.5 text-gray-600">
+                      New customer?{" "}
+                      <Link
+                        to="/register"
+                        className="text-blue-600 hover:text-orange-700 hover:underline"
+                      >
+                        Start here.
+                      </Link>
+                    </p>
+                  </div>
+                ) : (
+                  <div className="flex flex-col items-center p-3 bg-gray-50 border-b border-gray-200">
+                    <p className="text-sm font-semibold mb-2">
+                      {user.displayName || user.email}
+                    </p>
+                    <button
+                      onClick={async () => {
+                        await logout();
+                        setAccountDropdownOpen(false);
+                        navigate('/');
+                      }}
+                      className="bg-[#FFD814] w-48 py-1.5 rounded-md text-sm font-normal text-center shadow-sm hover:bg-[#F7CA00]"
+                    >
+                      Sign out
+                    </button>
+                  </div>
+                )}
 
                 <div className="flex p-3">
                   <div className="w-1/2 pr-2 border-r border-gray-200">
@@ -727,4 +750,7 @@ function Header(_props: HeaderProps) {
 }
 
 export default Header;
+
+
+
 

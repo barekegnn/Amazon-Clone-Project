@@ -3,6 +3,12 @@ import { useCart } from '../contexts/CartContext';
 import RecommendedProducts from '../components/RecommendedProducts/RecommendedProducts';
 import { EmptyState } from '../components/common/EmptyState';
 import { CheckoutProgress } from '../components/checkout/CheckoutProgress';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import PaymentForm from '../components/Payment/PaymentForm';
+
+// Initialize Stripe outside value to avoid recreating object on renders
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const Checkout = () => {
   const { 
@@ -20,6 +26,7 @@ const Checkout = () => {
 
   const [promoCodeInput, setPromoCodeInput] = useState("");
   const [discount, setDiscount] = useState(0);
+  const [step, setStep] = useState('cart'); // 'cart' or 'payment'
 
   const handleApplyPromoCode = () => {
     // Basic promo code logic (client-side for demo)
@@ -45,6 +52,60 @@ const Checkout = () => {
   const calculateDiscountAmount = () => {
       return totalPrice * discount;
   };
+
+  if (step === 'payment') {
+    return (
+      <>
+        <CheckoutProgress currentStep={3} />
+        <div className="bg-gray-100 min-h-screen py-6">
+          <div className="max-w-5xl mx-auto px-4">
+            <div className="flex flex-col md:flex-row gap-6">
+              <div className="md:w-2/3">
+                <Elements stripe={stripePromise}>
+                  <PaymentForm />
+                </Elements>
+                
+                <button
+                  onClick={() => setStep('cart')}
+                  className="mt-4 text-blue-600 hover:underline"
+                >
+                  ← Back to Cart
+                </button>
+              </div>
+              
+              <div className="md:w-1/3">
+                <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+                  <h3 className="font-bold text-lg mb-4">Order Summary</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Items ({totalItems}):</span>
+                      <span>${totalPrice.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Shipping & handling:</span>
+                      <span>$0.00</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Total before tax:</span>
+                      <span>${totalPrice.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Estimated tax to be collected:</span>
+                      <span>$0.00</span>
+                    </div>
+                    <div className="border-t pt-2 mt-2 font-bold text-lg text-[#B12704] flex justify-between">
+                      <span>Order Total:</span>
+                      <span>${totalPrice.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
@@ -140,7 +201,10 @@ const Checkout = () => {
                   <input type="checkbox" id="contains-gift" className="mr-2" />
                   <label htmlFor="contains-gift" className="text-sm text-gray-600">This order contains a gift</label>
                 </div>
-                <button className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-2 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50">
+                <button 
+                  onClick={() => setStep('payment')}
+                  className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-2 rounded-md transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50"
+                >
                   Proceed to Checkout
                 </button>
               </div>

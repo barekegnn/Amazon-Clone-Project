@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { Star } from "lucide-react";
-import { searchProviderProducts } from "../services/catalogApi";
+import { getProducts } from "../services/productApi";
 
 const SearchResults = () => {
   const [params] = useSearchParams();
@@ -31,9 +31,9 @@ const SearchResults = () => {
       setError(null);
 
       try {
-        const payload = await searchProviderProducts({ query, limit: 24 });
+        const products = await getProducts({ search: query, limit: 100 }); // High limit for search
         if (!isActive) return;
-        setResults(payload.products ?? []);
+        setResults(products ?? []);
       } catch (err) {
         if (!isActive) return;
         setError(err);
@@ -184,4 +184,7 @@ const SearchResults = () => {
 };
 
 export default SearchResults;
+
+
+
 

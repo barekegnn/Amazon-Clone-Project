@@ -4,6 +4,8 @@ import './App.css';
 import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import { DemoBanner } from './components/debug/DemoBanner';
+import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
 
 // Eager load critical pages
 import Home from './pages/Home';
@@ -12,12 +14,22 @@ import Home from './pages/Home';
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const Checkout = lazy(() => import('./pages/Checkout'));
+const Orders = lazy(() => import('./pages/Orders')); // Real Orders Page
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const Placeholder = lazy(() => import('./pages/Placeholder'));
 const SearchResults = lazy(() => import('./pages/SearchResults'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Features = lazy(() => import('./pages/Features'));
+
+// Admin Pages
+const AdminLayout = lazy(() => import('./components/Admin/AdminLayout'));
+const AdminDashboard = lazy(() => import('./pages/Admin/Dashboard'));
+const AdminProductList = lazy(() => import('./pages/Admin/ProductList'));
+const AdminProductForm = lazy(() => import('./pages/Admin/ProductForm'));
+const AdminOrderList = lazy(() => import('./pages/Admin/OrderList'));
+const AdminOrderDetail = lazy(() => import('./pages/Admin/OrderDetail'));
+const AdminUserList = lazy(() => import('./pages/Admin/UserList'));
 
 import { Skeleton } from './components/common/Skeleton';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
@@ -57,16 +69,50 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
-          <Route path="checkout" element={<Checkout />} />
+          
+          {/* Protected Routes - Require Authentication */}
+          <Route path="checkout" element={
+            <ProtectedRoute>
+              <Checkout />
+            </ProtectedRoute>
+          } />
+          <Route path="orders" element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          } />
+          <Route path="account" element={
+            <ProtectedRoute>
+              <Placeholder pageTitle="Your Account" />
+            </ProtectedRoute>
+          } />
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={
+            <AdminRoute>
+              <AdminLayout />
+            </AdminRoute>
+          }>
+            <Route index element={<AdminDashboard />} />
+            <Route path="products" element={<AdminProductList />} />
+            <Route path="products/new" element={<AdminProductForm />} />
+            <Route path="products/:id/edit" element={<AdminProductForm />} />
+            <Route path="orders" element={<AdminOrderList />} />
+            <Route path="orders/:id" element={<AdminOrderDetail />} />
+            <Route path="users" element={<AdminUserList />} />
+            {/* Future Routes:
+            
+            */}
+          </Route>
+          
+          {/* Public Routes */}
           <Route path="register" element={<Register />} />
           <Route path="product/:id" element={<ProductDetailPage />} />
           <Route path="category/*" element={<CategoryPage />} />
           <Route path="search" element={<SearchResults />} />
           <Route path="features" element={<Features />} />
           
-          {/* Specific Placeholder Routes for Header/Nav Links */}
-          <Route path="orders" element={<Placeholder pageTitle="Your Orders" />} />
-          <Route path="account" element={<Placeholder pageTitle="Your Account" />} />
+          {/* Other Placeholder Routes */}
           <Route path="recommendations" element={<Placeholder pageTitle="Recommendations" />} />
           <Route path="watchlist" element={<Placeholder pageTitle="Watchlist" />} />
           <Route path="music" element={<Placeholder pageTitle="Music Library" />} />

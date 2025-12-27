@@ -11,10 +11,10 @@ const ProductCarouselRow = ({ title, products }) => {
             id: item.id,
             title: item.title || `Product ${item.id}`,
             image: item.image,
-            price: 0,
-            rating: { rate: 0, count: 0 },
-            category: 'General',
-            description: '',
+            price: item.price || 0,
+            rating: item.rating || { rate: 0, count: 0 },
+            category: item.category || 'General',
+            description: item.description || '',
         });
     };
 
@@ -31,10 +31,10 @@ const ProductCarouselRow = ({ title, products }) => {
                             id: product.id,
                             title: product.title || `Product ${product.id}`,
                             image: product.image,
-                            price: 0,
-                            rating: { rate: 0, count: 0 },
-                            category: 'General',
-                            description: '',
+                            price: product.price || 0,
+                            rating: product.rating || { rate: 0, count: 0 },
+                            category: product.category || 'General',
+                            description: product.description || '',
                         }}}
                         key={product.id || index} 
                         className="flex-none cursor-pointer"

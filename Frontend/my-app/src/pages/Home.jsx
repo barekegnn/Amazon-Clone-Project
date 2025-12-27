@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { getProducts } from '../services/productApi';
 import HeroCarousel from '../components/Home/HeroCarousel';
 import HomeCard from '../components/Home/HomeCard';
 import ProductCarouselRow from '../components/Home/ProductCarouselRow';
@@ -64,6 +65,12 @@ import lawnCareImg from '../assets/products/home/lawn-care.jpg';
 import gardeningImg from '../assets/products/home/gardening.jpg';
 
 const Home = () => {
+    const [realProducts, setRealProducts] = useState([]);
+
+    useEffect(() => {
+        getProducts({ limit: 10 }).then(setRealProducts).catch(err => console.error("Failed to fetch products:", err));
+    }, []);
+
     // Row 1 Data (Overlap Grid)
     const row1Cards = [
         {
@@ -234,6 +241,11 @@ const Home = () => {
                 <HomeCard key={card.id} {...card} />
             ))}
          </div>
+
+         {/* New Arrivals - Real Data from Admin Panel */}
+         {realProducts.length > 0 && (
+            <ProductCarouselRow title="New Arrivals" products={realProducts} />
+         )}
 
          {/* Row 2: Standard Grid */}
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
