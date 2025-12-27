@@ -17,7 +17,7 @@ const authService = {
    * @param {string} email - User's email
    * @param {string} password - User's password
    * @param {string} displayName - User's display name (optional)
-   * @returns {Promise<Object>} User credentials
+   * @returns {Promise<Object>} User credentials with token
    */
   async registerUser(email, password, displayName = null) {
     try {
@@ -27,13 +27,17 @@ const authService = {
         await updateProfile(userCredential.user, { displayName });
       }
 
+      // Get Firebase ID token
+      const token = await userCredential.user.getIdToken();
+
       return {
         success: true,
         user: {
           uid: userCredential.user.uid,
           email: userCredential.user.email,
-          displayName: userCredential.user.displayName
-        }
+          displayName: displayName || userCredential.user.displayName
+        },
+        token
       };
     } catch (error) {
       console.error('Error registering user:', error);
@@ -49,11 +53,14 @@ const authService = {
    * Sign in an existing user
    * @param {string} email - User's email
    * @param {string} password - User's password
-   * @returns {Promise<Object>} User credentials
+   * @returns {Promise<Object>} User credentials with token
    */
   async loginUser(email, password) {
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
+
+      // Get Firebase ID token
+      const token = await userCredential.user.getIdToken();
 
       return {
         success: true,
@@ -61,7 +68,8 @@ const authService = {
           uid: userCredential.user.uid,
           email: userCredential.user.email,
           displayName: userCredential.user.displayName
-        }
+        },
+        token
       };
     } catch (error) {
       console.error('Error logging in:', error);

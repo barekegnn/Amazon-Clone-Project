@@ -38,7 +38,10 @@ export const register = asyncHandler(async (req, res) => {
   res.status(201).json({
     success: true,
     message: 'Registration successful',
-    data: result.user
+    data: {
+      user: result.user,
+      token: result.token
+    }
   });
 });
 
@@ -57,7 +60,10 @@ export const login = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Login successful',
-    data: result.user
+    data: {
+      user: result.user,
+      token: result.token
+    }
   });
 });
 
@@ -89,5 +95,28 @@ export const sendPasswordReset = asyncHandler(async (req, res) => {
   res.status(200).json({
     success: true,
     message: result.message
+  });
+});
+
+/**
+ * Verify the current auth token and return user info
+ * This endpoint is protected by the decodeAuthToken middleware
+ */
+export const verify = asyncHandler(async (req, res) => {
+  // req.user is set by decodeAuthToken middleware
+  if (!req.user) {
+    throw new ApiError(401, 'Invalid or missing authentication token');
+  }
+
+  res.status(200).json({
+    success: true,
+    message: 'Token is valid',
+    data: {
+      user: {
+        uid: req.user.uid,
+        email: req.user.email,
+        displayName: req.user.displayName || null,
+      }
+    }
   });
 });
