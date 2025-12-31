@@ -75,7 +75,7 @@ describe('Auth routes', () => {
 
     assert.equal(response.body.success, true);
     assert.equal(response.body.message, 'Registration successful');
-    assert.equal(response.body.data.email, payload.email);
+    assert.equal(response.body.data.user.email, payload.email);
   });
 
   it('maps Firebase auth errors on login', async () => {

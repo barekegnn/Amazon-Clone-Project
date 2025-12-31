@@ -125,32 +125,56 @@ export const handleWebhook = asyncHandler(async (req, res) => {
 
   // Handle different event types
   switch (event.type) {
-    case 'payment_intent.succeeded':
-      {
-        const paymentIntent = event.data.object;
-        console.log('Payment succeeded:', paymentIntent.id);
-        
-        // Find order by payment intent ID and update status
-        // This is a backup in case the frontend confirmation fails
-        // You might want to implement a query to find the order
-      }
-      break;
+    case 'payment_intent.succeeded': {
+      const paymentIntent = event.data.object;
+      console.log('Payment succeeded:', paymentIntent.id);
 
-    case 'payment_intent.payment_failed':
-      {
-        const paymentIntent = event.data.object;
-        console.log('Payment failed:', paymentIntent.id);
-        // Handle failed payment
-      }
-      break;
+      const orderResult = await orderService.getOrderByPaymentIntentId(paymentIntent.id);
 
-    case 'charge.refunded':
-      {
-        const charge = event.data.object;
-        console.log('Charge refunded:', charge.id);
-        // Handle refund
+      if (orderResult.success) {
+        const orderId = orderResult.order.id;
+        await orderService.updatePaymentStatus(orderId, 'paid');
+        await orderService.updateOrderStatus(orderId, 'processing');
+        console.log(`Order ${orderId} updated to processing.`);
+      } else {
+        console.error(`Order not found for payment intent ${paymentIntent.id}`);
       }
       break;
+    }
+
+    case 'payment_intent.payment_failed': {
+      const paymentIntent = event.data.object;
+      console.log('Payment failed:', paymentIntent.id);
+
+      const orderResult = await orderService.getOrderByPaymentIntentId(paymentIntent.id);
+
+      if (orderResult.success) {
+        const orderId = orderResult.order.id;
+        await orderService.updatePaymentStatus(orderId, 'failed');
+        await orderService.updateOrderStatus(orderId, 'cancelled');
+        console.log(`Order ${orderId} marked as failed.`);
+      } else {
+        console.error(`Order not found for payment intent ${paymentIntent.id}`);
+      }
+      break;
+    }
+
+    case 'charge.refunded': {
+      const charge = event.data.object;
+      console.log('Charge refunded:', charge.id);
+
+      const orderResult = await orderService.getOrderByPaymentIntentId(charge.payment_intent);
+
+      if (orderResult.success) {
+        const orderId = orderResult.order.id;
+        await orderService.updatePaymentStatus(orderId, 'refunded');
+        await orderService.updateOrderStatus(orderId, 'cancelled');
+        console.log(`Order ${orderId} marked as refunded.`);
+      } else {
+        console.error(`Order not found for payment intent ${charge.payment_intent}`);
+      }
+      break;
+    }
 
     default:
       console.log(`Unhandled event type: ${event.type}`);

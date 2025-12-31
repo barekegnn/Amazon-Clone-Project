@@ -188,6 +188,44 @@ const orderService = {
   },
 
   /**
+   * Get order by payment intent ID
+   * @param {string} paymentIntentId - Payment intent ID
+   * @returns {Promise<object>} Order data
+   */
+  async getOrderByPaymentIntentId(paymentIntentId) {
+    try {
+      const ordersRef = collection(db, 'orders');
+      const q = query(ordersRef, where('paymentIntentId', '==', paymentIntentId));
+
+      const querySnapshot = await getDocs(q);
+
+      if (querySnapshot.empty) {
+        return {
+          success: false,
+          error: 'Order not found for the given payment intent ID',
+        };
+      }
+
+      // Assuming paymentIntentId is unique, there should be only one doc
+      const orderDoc = querySnapshot.docs[0];
+      
+      return {
+        success: true,
+        order: {
+          id: orderDoc.id,
+          ...orderDoc.data(),
+        },
+      };
+    } catch (error) {
+      console.error('Error getting order by payment intent ID:', error);
+      return {
+        success: false,
+        error: error.message,
+      };
+    }
+  },
+
+  /**
    * Get all orders (admin only)
    * @param {number} limit - Maximum number of orders to return
    * @returns {Promise<object>} Array of all orders
@@ -229,6 +267,7 @@ export const {
   getUserOrders,
   updateOrderStatus,
   updatePaymentStatus,
+  getOrderByPaymentIntentId,
   getAllOrders,
 } = orderService;
 
