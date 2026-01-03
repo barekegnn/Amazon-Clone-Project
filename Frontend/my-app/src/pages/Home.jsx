@@ -76,28 +76,28 @@ const Home = () => {
         {
             id: 'r1-1', title: "Gaming Accessories", linkText: "See more", variant: "quad",
             data: [
-                { label: "Headsets", image: headsetImg, id: '9' },
-                { label: "Keyboards", image: keyboardImg, id: '11' },
-                { label: "Mice", image: mouseImg, id: '12' },
-                { label: "Chairs", image: chairImg, id: '10' }
+                { label: "Headsets", image: headsetImg, id: '9', price: 49.99 },
+                { label: "Keyboards", image: keyboardImg, id: '11', price: 65.00 },
+                { label: "Mice", image: mouseImg, id: '12', price: 29.50 },
+                { label: "Chairs", image: chairImg, id: '10', price: 189.99 }
             ]
         },
         {
             id: 'r1-2', title: "Deals in PCs", linkText: "Shop now", variant: "single",
-            data: { image: desktopImg, id: '13' }
+            data: { image: desktopImg, id: '13', price: 849.99 }
         },
         {
             id: 'r1-3', title: "Refresh your space", linkText: "See more", variant: "quad",
             data: [
-                { label: "Dining", image: diningImg, id: '6' },
-                { label: "Home", image: decorImg, id: '7' },
-                { label: "Kitchen", image: kitchenImg, id: '8' },
-                { label: "Health", image: healthImg, id: '5' }
+                { label: "Dining", image: diningImg, id: '6', price: 120.00 },
+                { label: "Home", image: decorImg, id: '7', price: 45.99 },
+                { label: "Kitchen", image: kitchenImg, id: '8', price: 89.00 },
+                { label: "Health", image: healthImg, id: '5', price: 34.50 }
             ]
         },
         {
             id: 'r1-4', title: "Toys & Games", linkText: "Shop now", variant: "single",
-            data: { image: toysGamesImg, id: '1-books' }
+            data: { image: toysGamesImg, id: '1-books', price: 24.99 }
         }
     ];
 
@@ -105,101 +105,101 @@ const Home = () => {
     const row2Cards = [
         {
              id: 'r2-1', title: "Amazon Basics", linkText: "See more", variant: "single",
-             data: { image: amazonBasicsImg, id: '2' }
+             data: { image: amazonBasicsImg, id: '2', price: 15.99 }
         },
         {
              id: 'r2-2', title: "Electronics", linkText: "See more", variant: "single",
-             data: { image: electronicsImg, id: '14' }
+             data: { image: electronicsImg, id: '14', price: 299.00 }
         },
         {
              id: 'r2-3', title: "Home & Kitchen", linkText: "Shop now", variant: "quad",
              data: [
-                { label: "Kitchen", image: kitchenImg, id: '8' },
-                { label: "Decor", image: decor2Img, id: '7' },
-                { label: "Bedding", image: beddingImg, id: '6' },
-                { label: "Towers", image: towersImg, id: '5' }
+                { label: "Kitchen", image: kitchenImg, id: '8', price: 79.99 },
+                { label: "Decor", image: decor2Img, id: '7', price: 29.50 },
+                { label: "Bedding", image: beddingImg, id: '6', price: 54.00 },
+                { label: "Towers", image: towersImg, id: '5', price: 18.99 }
              ]
         },
         {
              id: 'r2-4', title: "Beauty Picks", linkText: "Shop now", variant: "single",
-             data: { image: beautyImg, id: '15' }
+             data: { image: beautyImg, id: '15', price: 42.00 }
         }
     ];
 
     // Row 3 Data (Product Carousel - Holiday)
     const holidayData = [
-        { id: '16', title: 'Holiday Ornaments', image: ornamentsImg },
-        { id: '17', title: 'Gift Sets', image: giftSetsImg },
-        { id: '18', title: 'Holiday Lights', image: lightsImg },
-        { id: '19', title: 'Wreaths', image: wreathsImg },
-        { id: '20', title: 'Holiday Candles', image: candlesImg },
-        { id: '15', title: 'Gift Wrap', image: giftWrapImg },
-        { id: '14', title: 'Stockings', image: stockingsImg },
-        { id: '13', title: 'Holiday Mugs', image: mugsImg },
-        { id: '12', title: 'Snow Globes', image: snowGlobesImg },
-        { id: '11', title: 'Holiday Treats', image: treatsImg },
+        { id: '16', title: 'Holiday Ornaments', image: ornamentsImg, price: 12.99 },
+        { id: '17', title: 'Gift Sets', image: giftSetsImg, price: 34.50 },
+        { id: '18', title: 'Holiday Lights', image: lightsImg, price: 19.99 },
+        { id: '19', title: 'Wreaths', image: wreathsImg, price: 25.00 },
+        { id: '20', title: 'Holiday Candles', image: candlesImg, price: 15.75 },
+        { id: '15', title: 'Gift Wrap', image: giftWrapImg, price: 8.99 },
+        { id: '14', title: 'Stockings', image: stockingsImg, price: 14.25 },
+        { id: '13', title: 'Holiday Mugs', image: mugsImg, price: 10.50 },
+        { id: '12', title: 'Snow Globes', image: snowGlobesImg, price: 22.00 },
+        { id: '11', title: 'Holiday Treats', image: treatsImg, price: 18.50 },
     ];
 
      // Row 4 Data (Standard Grid)
      const row4Cards = [
         {
              id: 'r4-1', title: "Easy Returns", linkText: "Learn more", variant: "single",
-             data: { image: returnsImg, id: '1' }
+             data: { image: returnsImg, id: '1', price: 0.00 }
         },
         {
              id: 'r4-2', title: "Discover Fashion", linkText: "See more", variant: "quad",
              data: [
-                { label: "Jeans", image: jeansImg, id: '3' },
-                { label: "Tops", image: topsImg, id: '2' },
-                { label: "Dresses", image: dressesImg, id: '4' },
-                { label: "Shoes", image: shoesImg, id: '1' }
+                { label: "Jeans", image: jeansImg, id: '3', price: 39.99 },
+                { label: "Tops", image: topsImg, id: '2', price: 24.50 },
+                { label: "Dresses", image: dressesImg, id: '4', price: 49.00 },
+                { label: "Shoes", image: shoesImg, id: '1', price: 59.99 }
              ]
         },
         {
              id: 'r4-3', title: "Fitness Needs", linkText: "Shop now", variant: "single",
-             data: { image: fitnessImg, id: '9' }
+             data: { image: fitnessImg, id: '9', price: 129.00 }
         },
         {
              id: 'r4-4', title: "Kindle E-readers", linkText: "Shop now", variant: "single",
-             data: { image: kindleImg, id: '11' }
+             data: { image: kindleImg, id: '11', price: 99.99 }
         }
     ];
 
     // Row 5 Data (Product Carousel - Books)
     const booksData = [
-        { id: 'book-1', title: 'Fiction Bestseller', image: fictionImg },
-        { id: 'book-2', title: 'Mystery Novel', image: mysteryImg },
-        { id: 'book-3', title: 'Self Help', image: selfHelpImg },
-        { id: 'book-4', title: 'Cookbook', image: cookbookImg },
-        { id: 'book-5', title: 'Biography', image: biographyImg },
-        { id: 'book-6', title: 'Science Fiction', image: scifiImg },
-        { id: 'book-7', title: 'Travel Guide', image: travelImg },
-        { id: 'book-8', title: 'Business Book', image: businessImg },
-        { id: 'book-9', title: 'Art Book', image: artImg },
-        { id: 'book-10', title: 'Children\'s Book', image: childrenImg },
+        { id: 'book-1', title: 'Fiction Bestseller', image: fictionImg, price: 14.99 },
+        { id: 'book-2', title: 'Mystery Novel', image: mysteryImg, price: 12.50 },
+        { id: 'book-3', title: 'Self Help', image: selfHelpImg, price: 15.99 },
+        { id: 'book-4', title: 'Cookbook', image: cookbookImg, price: 24.00 },
+        { id: 'book-5', title: 'Biography', image: biographyImg, price: 18.75 },
+        { id: 'book-6', title: 'Science Fiction', image: scifiImg, price: 16.99 },
+        { id: 'book-7', title: 'Travel Guide', image: travelImg, price: 22.25 },
+        { id: 'book-8', title: 'Business Book', image: businessImg, price: 19.50 },
+        { id: 'book-9', title: 'Art Book', image: artImg, price: 35.00 },
+        { id: 'book-10', title: 'Children\'s Book', image: childrenImg, price: 10.99 },
     ];
 
     // Row 6 Data (Standard Grid)
     const row6Cards = [
         {
              id: 'r6-1', title: "Shop Laptops", linkText: "See more", variant: "single",
-             data: { image: laptopImg, id: '12' }
+             data: { image: laptopImg, id: '12', price: 999.00 }
         },
         {
              id: 'r6-2', title: "Health & Care", linkText: "Shop now", variant: "single",
-             data: { image: healthCareImg, id: '19' }
+             data: { image: healthCareImg, id: '19', price: 24.99 }
         },
         {
              id: 'r6-3', title: "Strip Lights", linkText: "Shop now", variant: "single",
-             data: { image: stripLightsImg, id: '11' }
+             data: { image: stripLightsImg, id: '11', price: 15.50 }
         },
         {
              id: 'r6-4', title: "New Toys", linkText: "See more", variant: "quad",
              data: [
-                { label: "Action Figures", image: actionFiguresImg, id: '12' },
-                { label: "Dolls", image: dollsImg, id: '15' },
-                { label: "Bikes & Ride-ons", image: bikesImg, id: '5' },
-                { label: "Arts & Crafts", image: artsCraftsImg, id: '7' }
+                { label: "Action Figures", image: actionFiguresImg, id: '12', price: 18.99 },
+                { label: "Dolls", image: dollsImg, id: '15', price: 22.50 },
+                { label: "Bikes & Ride-ons", image: bikesImg, id: '5', price: 145.00 },
+                { label: "Arts & Crafts", image: artsCraftsImg, id: '7', price: 12.99 }
              ]
         }
     ];
@@ -208,23 +208,23 @@ const Home = () => {
     const row7Cards = [
         {
              id: 'r7-1', title: "Pet Supplies", linkText: "Shop now", variant: "single",
-             data: { image: petSuppliesImg, id: '1' }
+             data: { image: petSuppliesImg, id: '1', price: 25.99 }
         },
         {
              id: 'r7-2', title: "Smartwatches", linkText: "Shop now", variant: "single",
-             data: { image: smartwatchImg, id: '10' }
+             data: { image: smartwatchImg, id: '10', price: 199.00 }
         },
         {
              id: 'r7-3', title: "Deals on Tools", linkText: "Shop now", variant: "single",
-             data: { image: toolsImg, id: '9' }
+             data: { image: toolsImg, id: '9', price: 85.00 }
         },
         {
              id: 'r7-4', title: "Gardening", linkText: "See more", variant: "quad",
              data: [
-                { label: "Outdoor Decor", image: outdoorDecorImg, id: '6' },
-                { label: "Furniture", image: furnitureImg, id: '7' },
-                { label: "Lawn Care", image: lawnCareImg, id: '8' },
-                { label: "Gardening", image: gardeningImg, id: '5' }
+                { label: "Outdoor Decor", image: outdoorDecorImg, id: '6', price: 45.00 },
+                { label: "Furniture", image: furnitureImg, id: '7', price: 299.00 },
+                { label: "Lawn Care", image: lawnCareImg, id: '8', price: 34.99 },
+                { label: "Gardening", image: gardeningImg, id: '5', price: 15.50 }
              ]
         }
     ];

@@ -10,10 +10,10 @@ const HomeCard = ({ title, linkText, variant, data }) => {
         id: item.id || '0',
         title: item.label || item.title || title || 'Product',
         image: item.image,
-        price: 0,
-        rating: { rate: 0, count: 0 },
-        category: 'General',
-        description: '',
+        price: item.price || 0,
+        rating: item.rating || { rate: 0, count: 0 },
+        category: item.category || 'General',
+        description: item.description || '',
     });
 
     return (
