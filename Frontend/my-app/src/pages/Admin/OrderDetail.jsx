@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Package, Truck, CheckCircle, XCircle } from 'lucide-react';
 import { getOrderById, updateOrderStatus } from '../../services/adminOrderApi';
@@ -10,24 +10,22 @@ const OrderDetail = () => {
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
-  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    fetchOrder();
-  }, [id]);
-
-  const fetchOrder = async () => {
+  const fetchOrder = useCallback(async () => {
     try {
       setLoading(true);
       const data = await getOrderById(id);
       setOrder(data);
     } catch (err) {
-      setError('Failed to load order details');
       console.error(err);
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchOrder();
+  }, [fetchOrder]);
 
   const handleStatusChange = async (newStatus) => {
     if (!window.confirm(`Are you sure you want to change status to "${newStatus}"?`)) return;
@@ -36,7 +34,7 @@ const OrderDetail = () => {
       setUpdating(true);
       await updateOrderStatus(id, newStatus);
       setOrder(prev => ({ ...prev, status: newStatus }));
-    } catch (err) {
+    } catch {
       alert('Failed to update status');
     } finally {
       setUpdating(false);

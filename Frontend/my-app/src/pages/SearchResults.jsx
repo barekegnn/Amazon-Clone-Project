@@ -38,7 +38,6 @@ const SearchResults = () => {
         if (!isActive) return;
         setError(err);
       } finally {
-        if (!isActive) return;
         setLoading(false);
       }
     }

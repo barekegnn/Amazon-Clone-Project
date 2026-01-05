@@ -24,10 +24,8 @@ export const db = getFirestore(app);
 
 // Analytics (optional)
 let analytics = null;
-try {
+if (typeof window !== 'undefined') {
   analytics = getAnalytics(app);
-} catch (error) {
-  console.log('Analytics not available');
 }
 
 export { analytics };

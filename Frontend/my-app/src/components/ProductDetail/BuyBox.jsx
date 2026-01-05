@@ -1,6 +1,5 @@
 import React from 'react';
 import { useCart } from '../../context/CartContext';
-import { getCartTotal } from '../../context/cartReducer'; // Just in case needed later, or correct imports
 
 const BuyBox = ({ product }) => {
     const { dispatch } = useCart();

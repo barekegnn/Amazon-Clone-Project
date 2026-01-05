@@ -16,7 +16,7 @@ export const getCartQuantity = (basket) =>
 const cartReducer = (state, action) => {
   console.log(action);
   switch (action.type) {
-    case "ADD_TO_CART":
+    case "ADD_TO_CART": {
       // Logic to check if item exists and increment quantity is better for a real app,
       // but standard Amazon clone tutorials often just push to array. 
       // The prompt asks to "increase the quantity if the item already exists".
@@ -42,8 +42,8 @@ const cartReducer = (state, action) => {
         ...state,
         basket: newBasket,
       };
-
-    case "REMOVE_FROM_BASKET": // Renamed action type
+    }
+    case "REMOVE_FROM_BASKET": { // Renamed action type
        const indexToRemove = state.basket.findIndex(
         (basketItem) => basketItem.id === action.id
       );
@@ -62,7 +62,7 @@ const cartReducer = (state, action) => {
         ...state,
         basket: newBasketRemove
       };
-
+    }
     case "ADJUST_QUANTITY":
       return {
         ...state,
@@ -71,7 +71,7 @@ const cartReducer = (state, action) => {
         ),
       };
 
-    case "SAVE_FOR_LATER":
+    case "SAVE_FOR_LATER": {
       const itemToSave = state.basket.find((item) => item.id === action.id);
       if (!itemToSave) return state;
 
@@ -80,8 +80,8 @@ const cartReducer = (state, action) => {
         basket: state.basket.filter((item) => item.id !== action.id),
         savedForLater: [...state.savedForLater, itemToSave],
       };
-
-    case "MOVE_TO_BASKET":
+    }
+    case "MOVE_TO_BASKET": {
       const itemToMove = state.savedForLater.find((item) => item.id === action.id);
       if (!itemToMove) return state;
 
@@ -90,7 +90,7 @@ const cartReducer = (state, action) => {
         savedForLater: state.savedForLater.filter((item) => item.id !== action.id),
         basket: [...state.basket, itemToMove],
       };
-
+    }
     case "REMOVE_FROM_SAVED":
       return {
         ...state,

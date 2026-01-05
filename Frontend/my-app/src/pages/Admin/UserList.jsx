@@ -44,7 +44,7 @@ const UserList = () => {
       setUsers(users.map(u => 
         u.uid === userId ? { ...u, role: newRole } : u
       ));
-    } catch (err) {
+    } catch {
       alert('Failed to update role');
     } finally {
       setUpdatingId(null);

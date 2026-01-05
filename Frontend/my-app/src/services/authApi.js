@@ -105,15 +105,14 @@ export async function loginUser(email, password) {
  * @returns {Promise<Object>} Response indicating success
  */
 export async function logoutUser() {
-  try {
-    const token = localStorage.getItem('authToken');
-    
-    if (!token) {
-      // No token, just clear local storage
-      localStorage.removeItem('authToken');
-      return { success: true };
-    }
+  const token = localStorage.getItem('authToken');
+  localStorage.removeItem('authToken');
 
+  if (!token) {
+    return { success: true };
+  }
+
+  try {
     const response = await fetch(`${API_BASE_URL}/api/auth/logout`, {
       method: 'POST',
       headers: {
@@ -122,20 +121,14 @@ export async function logoutUser() {
       },
     });
 
-    // Clear token regardless of response
-    localStorage.removeItem('authToken');
-    
     if (!response.ok) {
-      // Even if logout fails on server, we've cleared local token
       console.warn('Server logout failed, but local token cleared');
     }
-    
-    return { success: true };
   } catch (error) {
-    // Clear token even on error
-    localStorage.removeItem('authToken');
-    return { success: true }; // Return success since we cleared local state
+    console.warn('Error during server logout:', error);
   }
+
+  return { success: true };
 }
 
 /**

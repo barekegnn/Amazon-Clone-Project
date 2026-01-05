@@ -110,12 +110,12 @@ const HeroCarousel = () => {
 
   const goToNext = useCallback(
     () => setActiveIndex((prev) => (prev + 1) % slideCount),
-    [slideCount],
+    [],
   );
 
   const goToPrev = useCallback(
     () => setActiveIndex((prev) => (prev - 1 + slideCount) % slideCount),
-    [slideCount],
+    [],
   );
 
   useEffect(() => {

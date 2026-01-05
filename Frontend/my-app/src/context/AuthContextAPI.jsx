@@ -56,6 +56,7 @@ const authReducer = (state, action) => {
 };
 
 // Create context
+// eslint-disable-next-line react-refresh/only-export-components
 export const AuthContext = createContext();
 
 // Auth Provider Component
@@ -143,15 +144,9 @@ export const AuthProvider = ({ children }) => {
 
   // Logout user
   const logout = async () => {
-    try {
-      await authApi.logoutUser();
-      dispatch({ type: AUTH_ACTIONS.LOGOUT });
-      return { success: true };
-    } catch (error) {
-      // Even if API call fails, clear local state
-      dispatch({ type: AUTH_ACTIONS.LOGOUT });
-      return { success: true };
-    }
+    await authApi.logoutUser();
+    dispatch({ type: AUTH_ACTIONS.LOGOUT });
+    return { success: true };
   };
 
   // Reset password
@@ -203,6 +198,7 @@ export const AuthProvider = ({ children }) => {
 };
 
 // Custom hook to use auth context
+// eslint-disable-next-line react-refresh/only-export-components
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

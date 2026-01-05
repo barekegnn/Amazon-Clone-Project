@@ -33,7 +33,7 @@ const ProductList = () => {
       try {
         await deleteProduct(id);
         setProducts(products.filter(p => p.id !== id));
-      } catch (err) {
+      } catch {
         alert('Failed to delete product');
       }
     }

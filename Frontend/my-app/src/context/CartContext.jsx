@@ -2,6 +2,7 @@ import React, { createContext, useContext, useReducer } from "react";
 import cartReducer, { initialState } from "./cartReducer";
 
 // Prepares the dataLayer
+// eslint-disable-next-line react-refresh/only-export-components
 export const CartContext = createContext();
 
 // Wrap our app and provide the Data layer
@@ -32,4 +33,5 @@ export const CartProvider = ({ children }) => {
 };
 
 // Pull information from the data layer
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => useContext(CartContext);

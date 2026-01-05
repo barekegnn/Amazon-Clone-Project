@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createProduct, getProductById, updateProduct } from '../../services/productApi';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
@@ -32,22 +32,22 @@ const ProductForm = () => {
     "books"
   ];
 
-  useEffect(() => {
-    if (isEditMode) {
-      fetchProduct();
-    }
-  }, [id]);
-
-  const fetchProduct = async () => {
+  const fetchProduct = useCallback(async () => {
     try {
       const data = await getProductById(id);
       setFormData(data);
-    } catch (err) {
+    } catch {
       setError('Failed to load product details');
     } finally {
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    if (isEditMode) {
+      fetchProduct();
+    }
+  }, [isEditMode, fetchProduct]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

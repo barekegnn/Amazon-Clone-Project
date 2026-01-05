@@ -2,27 +2,30 @@ import React, { useEffect, useState } from 'react';
 import { DollarSign, ShoppingBag, Users, TrendingUp } from 'lucide-react';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 
-const StatCard = ({ title, value, icon: Icon, color, trend }) => (
-  <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-    <div className="flex justify-between items-start">
-      <div>
-        <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
-        <h3 className="text-2xl font-bold text-gray-900">{value}</h3>
+const StatCard = ({ title, value, icon, color, trend }) => {
+  const Icon = icon;
+  return (
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
+      <div className="flex justify-between items-start">
+        <div>
+          <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
+          <h3 className="text-2xl font-bold text-gray-900">{value}</h3>
+        </div>
+        <div className={`p-3 rounded-full ${color}`}>
+          <Icon size={24} className="text-white" />
+        </div>
       </div>
-      <div className={`p-3 rounded-full ${color}`}>
-        <Icon size={24} className="text-white" />
-      </div>
+      {trend && (
+        <div className="mt-4 flex items-center text-sm">
+          <span className={`font-medium ${trend >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            {trend >= 0 ? '+' : ''}{trend}%
+          </span>
+          <span className="text-gray-500 ml-2">from last month</span>
+        </div>
+      )}
     </div>
-    {trend && (
-      <div className="mt-4 flex items-center text-sm">
-        <span className={`font-medium ${trend >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-          {trend >= 0 ? '+' : ''}{trend}%
-        </span>
-        <span className="text-gray-500 ml-2">from last month</span>
-      </div>
-    )}
-  </div>
-);
+  )
+};
 
 const Dashboard = () => {
   const [loading, setLoading] = useState(true);

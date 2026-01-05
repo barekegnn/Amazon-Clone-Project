@@ -47,12 +47,8 @@ async function authenticatedRequest(endpoint, method = 'GET', body = null) {
  * @returns {Promise<object>} Payment intent client secret and order ID
  */
 export async function createPaymentIntent(paymentData) {
-  try {
-    const result = await authenticatedRequest('/api/payment/create-intent', 'POST', paymentData);
-    return result.data;
-  } catch (error) {
-    throw error;
-  }
+  const result = await authenticatedRequest('/api/payment/create-intent', 'POST', paymentData);
+  return result.data;
 }
 
 /**
@@ -62,15 +58,11 @@ export async function createPaymentIntent(paymentData) {
  * @returns {Promise<object>} Payment status
  */
 export async function confirmPayment(paymentIntentId, orderId) {
-  try {
-    const result = await authenticatedRequest('/api/payment/confirm', 'POST', {
-      paymentIntentId,
-      orderId,
-    });
-    return result.data;
-  } catch (error) {
-    throw error;
-  }
+  const result = await authenticatedRequest('/api/payment/confirm', 'POST', {
+    paymentIntentId,
+    orderId,
+  });
+  return result.data;
 }
 
 /**
@@ -78,12 +70,8 @@ export async function confirmPayment(paymentIntentId, orderId) {
  * @returns {Promise<array>} List of orders
  */
 export async function getUserOrders() {
-  try {
-    const result = await authenticatedRequest('/api/payment/orders');
-    return result.data.orders;
-  } catch (error) {
-    throw error;
-  }
+  const result = await authenticatedRequest('/api/payment/orders');
+  return result.data.orders;
 }
 
 /**
@@ -92,10 +80,6 @@ export async function getUserOrders() {
  * @returns {Promise<object>} Order details
  */
 export async function getOrderById(orderId) {
-  try {
-    const result = await authenticatedRequest(`/api/payment/orders/${orderId}`);
-    return result.data.order;
-  } catch (error) {
-    throw error;
-  }
+  const result = await authenticatedRequest(`/api/payment/orders/${orderId}`);
+  return result.data.order;
 }
