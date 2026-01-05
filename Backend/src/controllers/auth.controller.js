@@ -18,6 +18,8 @@ const mapFirebaseAuthError = (code, fallbackMessage) => {
       return { status: 401, message: 'Incorrect password.' };
     case 'auth/too-many-requests':
       return { status: 429, message: 'Too many attempts. Please try again later.' };
+    case 'auth/invalid-credential':
+      return { status: 401, message: 'Invalid email or password.' };
     default:
       return { status: 400, message: fallbackMessage ?? 'Authentication error.' };
   }
