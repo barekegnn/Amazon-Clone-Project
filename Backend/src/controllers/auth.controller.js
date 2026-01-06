@@ -118,6 +118,7 @@ export const verify = asyncHandler(async (req, res) => {
         uid: req.user.uid,
         email: req.user.email,
         displayName: req.user.displayName || null,
+        role: req.user.role || 'user',
       }
     }
   });

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { DollarSign, ShoppingBag, Users, TrendingUp } from 'lucide-react';
+import { DollarSign, ShoppingBag, Users, TrendingUp, Package } from 'lucide-react';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
+import { getAdminStats } from '../../services/adminApi';
 
 const StatCard = ({ title, value, icon, color, trend }) => {
   const Icon = icon;
@@ -15,14 +16,6 @@ const StatCard = ({ title, value, icon, color, trend }) => {
           <Icon size={24} className="text-white" />
         </div>
       </div>
-      {trend && (
-        <div className="mt-4 flex items-center text-sm">
-          <span className={`font-medium ${trend >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-            {trend >= 0 ? '+' : ''}{trend}%
-          </span>
-          <span className="text-gray-500 ml-2">from last month</span>
-        </div>
-      )}
     </div>
   )
 };
@@ -33,21 +26,26 @@ const Dashboard = () => {
     revenue: 0,
     orders: 0,
     users: 0,
-    growth: 0
+    products: 0
   });
+  const [recentOrders, setRecentOrders] = useState([]);
 
   useEffect(() => {
-    // Mock data fetching - In real app, create a stats endpoint
-    setTimeout(() => {
-      setStats({
-        revenue: 12450.00,
-        orders: 156,
-        users: 890,
-        growth: 12.5
-      });
-      setLoading(false);
-    }, 1000);
+    fetchStats();
   }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      const data = await getAdminStats();
+      setStats(data.stats);
+      setRecentOrders(data.recentOrders);
+    } catch (err) {
+      console.error('Failed to fetch stats:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   if (loading) return <div className="flex justify-center p-12"><LoadingSpinner /></div>;
 
@@ -56,35 +54,31 @@ const Dashboard = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <StatCard 
           title="Total Revenue" 
-          value={`$${stats.revenue.toLocaleString()}`} 
+          value={`$${stats.revenue.toFixed(2)}`} 
           icon={DollarSign} 
           color="bg-green-500" 
-          trend={12.5}
         />
         <StatCard 
           title="Total Orders" 
           value={stats.orders} 
           icon={ShoppingBag} 
           color="bg-blue-500" 
-          trend={8.2}
         />
         <StatCard 
           title="Active Users" 
           value={stats.users} 
           icon={Users} 
           color="bg-purple-500" 
-          trend={5.3}
         />
         <StatCard 
-          title="Growth" 
-          value={`${stats.growth}%`} 
-          icon={TrendingUp} 
+          title="Total Products" 
+          value={stats.products} 
+          icon={Package} 
           color="bg-orange-500" 
-          trend={2.1}
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
           <h3 className="text-lg font-bold mb-4">Recent Orders</h3>
           <div className="overflow-x-auto">
@@ -98,36 +92,31 @@ const Dashboard = () => {
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <tr key={i} className="hover:bg-gray-50">
-                    <td className="px-4 py-3 font-medium">#ORD-{1000 + i}</td>
-                    <td className="px-4 py-3">Customer {i}</td>
+                {recentOrders.map((order) => (
+                  <tr key={order.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-3 font-mono text-xs">{order.id}</td>
+                    <td className="px-4 py-3 text-xs">{order.userEmail}</td>
                     <td className="px-4 py-3">
-                      <span className="px-2 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                        Delivered
+                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                        order.status === 'delivered' ? 'bg-green-100 text-green-800' :
+                        order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                        'bg-yellow-100 text-yellow-800'
+                      }`}>
+                        {order.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3">$120.00</td>
+                    <td className="px-4 py-3 font-medium">${order.total?.toFixed(2)}</td>
                   </tr>
                 ))}
+                {recentOrders.length === 0 && (
+                  <tr>
+                    <td colSpan="4" className="px-4 py-8 text-center text-gray-500">
+                      No recent orders.
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-          <h3 className="text-lg font-bold mb-4">Popular Products</h3>
-          <div className="space-y-4">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-gray-200 rounded-md"></div>
-                <div className="flex-1">
-                  <h4 className="font-medium text-gray-900">Product Name {i}</h4>
-                  <p className="text-sm text-gray-500">Category</p>
-                </div>
-                <div className="font-bold text-gray-900">$99.99</div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

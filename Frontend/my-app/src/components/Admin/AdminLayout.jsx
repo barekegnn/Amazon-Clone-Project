@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Package, ShoppingBag, Users, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Package, ShoppingBag, Users, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContextAPI';
 
 const AdminLayout = () => {
@@ -16,7 +16,6 @@ const AdminLayout = () => {
     { path: '/admin/products', label: 'Products', icon: Package },
     { path: '/admin/orders', label: 'Orders', icon: ShoppingBag },
     { path: '/admin/users', label: 'Users', icon: Users },
-    { path: '/admin/settings', label: 'Settings', icon: Settings },
   ];
 
   return (

@@ -10,6 +10,7 @@ import paymentRoutes from './routes/payment.routes.js';
 import productRoutes from './routes/product.routes.js';
 import orderRoutes from './routes/order.routes.js';
 import userRoutes from './routes/user.routes.js';
+import adminRoutes from './routes/admin.routes.js';
 import { decodeAuthToken } from './middlewares/auth.middleware.js';
 
 // Load environment variables
@@ -55,6 +56,7 @@ app.use('/api/payment', paymentRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/admin', adminRoutes);
 
 // 404 handler
 app.use(notFoundHandler);
