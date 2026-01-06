@@ -102,8 +102,7 @@ const orderService = {
       const ordersRef = collection(db, 'orders');
       const q = query(
         ordersRef,
-        where('userId', '==', userId),
-        orderBy('createdAt', 'desc')
+        where('userId', '==', userId)
       );
 
       const querySnapshot = await getDocs(q);
@@ -114,6 +113,13 @@ const orderService = {
           id: doc.id,
           ...doc.data(),
         });
+      });
+
+      // Sort in memory to avoid needing a Firestore index
+      orders.sort((a, b) => {
+        const dateA = a.createdAt?.seconds || 0;
+        const dateB = b.createdAt?.seconds || 0;
+        return dateB - dateA;
       });
 
       return {

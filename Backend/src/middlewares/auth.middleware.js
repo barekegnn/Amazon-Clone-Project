@@ -32,12 +32,14 @@ export const decodeAuthToken = asyncHandler(async (req, res, next) => {
 
     return next();
   } catch (error) {
+    console.error('Auth verification failed:', error.message);
     throw new ApiError(401, 'Invalid or expired authentication token.');
   }
 });
 
 export const requireAuth = (req, res, next) => {
   if (!req.user) {
+    console.warn('Authentication required but req.user is missing');
     throw new ApiError(401, 'Authentication required to access this resource.');
   }
   next();

@@ -6,14 +6,13 @@ import { useAuth } from '../../context/AuthContextAPI';
 import { createPaymentIntent, confirmPayment } from '../../services/paymentApi';
 import LoadingSpinner from '../common/LoadingSpinner';
 import ErrorMessage from '../common/ErrorMessage';
-import { Currency } from 'lucide-react';
 
 const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
   
-  const { cart, total, clearCart } = useCart();
+  const { items, totalPrice, clearCart } = useCart();
   const { user } = useAuth();
   
   const [error, setError] = useState(null);
@@ -26,12 +25,13 @@ const PaymentForm = () => {
   
   // Create PaymentIntent as soon as the page loads
   useEffect(() => {
-    if (cart.length > 0 && total > 0) {
+    if (items.length > 0 && totalPrice > 0) {
       const initializePayment = async () => {
         try {
+          console.log("Initializing payment for amount:", totalPrice);
           const data = await createPaymentIntent({
-            amount: Math.round(total * 100), // Convert to cents
-            items: cart.map(item => ({
+            amount: Math.round(totalPrice * 100), // Convert to cents
+            items: items.map(item => ({
               id: item.id,
               title: item.title,
               price: item.price,
@@ -47,23 +47,36 @@ const PaymentForm = () => {
             }
           });
           
-          setClientSecret(data.clientSecret);
-          setOrderId(data.orderId);
+          if (data?.clientSecret) {
+            setClientSecret(data.clientSecret);
+            setOrderId(data.orderId);
+            setError(null);
+          } else {
+            throw new Error("No client secret received from server");
+          }
         } catch (err) {
-          setError('Failed to initialize payment. Please try again.');
-          console.error(err);
+          console.error('Payment initialization error:', err);
+          setError(err.message || 'Failed to initialize payment. Please try again.');
         }
       };
       
       initializePayment();
     }
-  }, [cart, total]);
+  }, [items, totalPrice]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setProcessing(true);
 
     if (!stripe || !elements) {
+      setError("Stripe hasn't loaded properly. Please refresh.");
+      setProcessing(false);
+      return;
+    }
+
+    if (!clientSecret) {
+      setError("Payment system is not ready. Please wait or refresh.");
+      setProcessing(false);
       return;
     }
 
@@ -152,7 +165,7 @@ const PaymentForm = () => {
           <div className="flex justify-between items-center mb-2">
             <span className="font-medium text-red-700">Order Total:</span>
             <span className="text-xl font-bold text-red-700">
-              ${total.toFixed(2)}
+              ${(totalPrice || 0).toFixed(2)}
             </span>
           </div>
         </div>

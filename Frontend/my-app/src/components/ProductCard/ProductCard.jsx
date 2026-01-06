@@ -1,21 +1,16 @@
-import React from 'react';
-import { Star } from 'lucide-react';
-import { useCart } from '../../context/CartContext';
+import { useCart } from '../../contexts/CartContext';
 import { Link } from 'react-router-dom';
 
 function ProductCard({ id, title, image, price, rating }) {
-  const { dispatch } = useCart();
+  const { addToCart: addToCartAction } = useCart();
 
   const addToCart = () => {
-    dispatch({
-      type: "ADD_TO_CART",
-      item: {
-        id,
-        title,
-        image,
-        price,
-        rating,
-      },
+    addToCartAction({
+      id,
+      title,
+      image,
+      price: price || 0,
+      quantity: 1
     });
   };
 

@@ -1,19 +1,17 @@
 import React from 'react';
-import { useCart } from '../../context/CartContext';
+import { useCart } from '../../contexts/CartContext';
 
 const BuyBox = ({ product }) => {
-    const { dispatch } = useCart();
+    const { addToCart: addToCartAction } = useCart();
+    const [qty, setQty] = React.useState(1);
     
-    const addToCart = () => {
-        dispatch({
-            type: "ADD_TO_CART",
-            item: {
-                id: product.id,
-                title: product.title,
-                image: product.image,
-                price: product.price,
-                rating: product.rating,
-            },
+    const handleAddToCart = () => {
+        addToCartAction({
+            id: product.id,
+            title: product.title,
+            image: product.image,
+            price: product.price || 0,
+            quantity: qty
         });
     };
 
@@ -39,7 +37,11 @@ const BuyBox = ({ product }) => {
 
              <div className="mb-4">
                  <label className="text-xs font-bold block mb-1">Qty:</label>
-                 <select className="bg-gray-100 border border-gray-300 rounded-md p-1 shadow-sm focus:ring-amazonclone-orange">
+                 <select 
+                    value={qty}
+                    onChange={(e) => setQty(Number(e.target.value))}
+                    className="bg-gray-100 border border-gray-300 rounded-md p-1 shadow-sm focus:ring-amazonclone-orange"
+                >
                      {[1,2,3,4,5,6,7,8,9,10].map(num => (
                          <option key={num} value={num}>{num}</option>
                      ))}
@@ -47,7 +49,7 @@ const BuyBox = ({ product }) => {
              </div>
 
             <button 
-                onClick={addToCart}
+                onClick={handleAddToCart}
                 className="w-full bg-[#f7ca00] hover:bg-[#f0c14b] border border-[#fcd200] rounded-full py-1.5 text-sm shadow-sm cursor-pointer mb-2"
             >
                 Add to Cart

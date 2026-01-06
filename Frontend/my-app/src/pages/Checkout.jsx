@@ -12,10 +12,10 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY);
 
 const Checkout = () => {
   const { 
-    items, 
-    savedForLater, 
-    totalItems, 
-    totalPrice, 
+    items = [], 
+    savedForLater = [], 
+    totalItems = 0, 
+    totalPrice = 0, 
     removeFromCart, 
     updateQuantity, 
     saveForLater: saveForLaterAction, 
@@ -46,11 +46,11 @@ const Checkout = () => {
   };
 
   const calculateTotal = () => {
-      return totalPrice * (1 - discount);
+      return (totalPrice || 0) * (1 - discount);
   };
   
   const calculateDiscountAmount = () => {
-      return totalPrice * discount;
+      return (totalPrice || 0) * discount;
   };
 
   if (step === 'payment') {
@@ -78,8 +78,8 @@ const Checkout = () => {
                   <h3 className="font-bold text-lg mb-4">Order Summary</h3>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span>Items ({totalItems}):</span>
-                      <span>${totalPrice.toFixed(2)}</span>
+                      <span>Items ({totalItems || 0}):</span>
+                      <span>${(totalPrice || 0).toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Shipping & handling:</span>
@@ -87,7 +87,7 @@ const Checkout = () => {
                     </div>
                     <div className="flex justify-between">
                       <span>Total before tax:</span>
-                      <span>${totalPrice.toFixed(2)}</span>
+                      <span>${(totalPrice || 0).toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Estimated tax to be collected:</span>
@@ -95,7 +95,7 @@ const Checkout = () => {
                     </div>
                     <div className="border-t pt-2 mt-2 font-bold text-lg text-[#B12704] flex justify-between">
                       <span>Order Total:</span>
-                      <span>${totalPrice.toFixed(2)}</span>
+                      <span>${(totalPrice || 0).toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
@@ -169,8 +169,8 @@ const Checkout = () => {
                 ))}
 
                 <div className="flex justify-between mb-2 mt-4">
-                  <span className="text-gray-700">Subtotal ({totalItems} items):</span>
-                  <span className="font-semibold">${totalPrice.toFixed(2)}</span>
+                  <span className="text-gray-700">Subtotal ({totalItems || 0} items):</span>
+                  <span className="font-semibold">${(totalPrice || 0).toFixed(2)}</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between mb-2">
