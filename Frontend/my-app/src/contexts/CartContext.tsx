@@ -161,6 +161,9 @@ interface CartContextType extends CartState {
   saveForLater: (id: number | string) => void;
   removeFromSaved: (id: number | string) => void;
   moveToBasket: (id: number | string) => void;
+  isCartOpen: boolean;
+  openCart: () => void;
+  closeCart: () => void;
 }
 
 const CartContext = createContext<CartContextType | null>(null);
@@ -193,9 +196,15 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.setItem('amazonCloneCartTS', JSON.stringify(state));
   }, [state]);
 
+  const [isCartOpen, setIsCartOpen] = React.useState(false);
+
   // Actions
+  const openCart = () => setIsCartOpen(true);
+  const closeCart = () => setIsCartOpen(false);
+
   const addToCart = (product: CartItem) => {
     dispatch({ type: 'ADD_TO_CART', payload: product });
+    setIsCartOpen(true); // Auto-open cart on add
   };
 
   const removeFromCart = (id: number | string) => {
@@ -235,7 +244,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     toggleGift,
     saveForLater,
     removeFromSaved,
-    moveToBasket
+    moveToBasket,
+    isCartOpen,
+    openCart,
+    closeCart
   };
 
   return (

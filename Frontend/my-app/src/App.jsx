@@ -15,6 +15,7 @@ const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const Orders = lazy(() => import('./pages/Orders')); // Real Orders Page
+const OrderDetail = lazy(() => import('./pages/OrderDetail'));
 const ProductDetailPage = lazy(() => import('./pages/ProductDetailPage'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const Placeholder = lazy(() => import('./pages/Placeholder'));
@@ -33,6 +34,7 @@ const AdminUserList = lazy(() => import('./pages/Admin/UserList'));
 
 import { Skeleton } from './components/common/Skeleton';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
+import { ToastProvider } from './components/common/Toast';
 
 const FullPageLoader = () => (
   <div className="p-8 max-w-[1500px] mx-auto">
@@ -63,9 +65,14 @@ const Layout = () => {
   );
 };
 
+import CartDrawer from './components/cart/CartDrawer';
+import ScrollToTop from './components/common/ScrollToTop';
+
 const App = () => {
   return (
     <div className="app">
+      <ScrollToTop />
+      <CartDrawer />
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
@@ -79,6 +86,11 @@ const App = () => {
           <Route path="orders" element={
             <ProtectedRoute>
               <Orders />
+            </ProtectedRoute>
+          } />
+          <Route path="orders/:id" element={
+            <ProtectedRoute>
+              <OrderDetail />
             </ProtectedRoute>
           } />
           <Route path="account" element={
@@ -100,9 +112,6 @@ const App = () => {
             <Route path="orders" element={<AdminOrderList />} />
             <Route path="orders/:id" element={<AdminOrderDetail />} />
             <Route path="users" element={<AdminUserList />} />
-            {/* Future Routes:
-            
-            */}
           </Route>
           
           {/* Public Routes */}

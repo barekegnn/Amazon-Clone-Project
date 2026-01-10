@@ -31,7 +31,7 @@ const HomeCard = ({ title, linkText, variant, data }) => {
                          <img 
                             src={data.image} 
                             alt={data.alt || title} 
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-contain p-2"
                          />
                     </Link>
                 ) : (
@@ -48,7 +48,7 @@ const HomeCard = ({ title, linkText, variant, data }) => {
                                     <img 
                                         src={item.image} 
                                         alt={item.label}
-                                        className="w-full h-full object-cover"
+                                        className="w-full h-full object-contain"
                                      />
                                 </div>
                                 <span className="text-xs font-medium text-gray-800">{item.label}</span>

@@ -1,5 +1,17 @@
-import { db } from '../config/firebase.config.js';
-import { collection, addDoc, getDoc, getDocs, doc, query, where, orderBy, updateDoc, Timestamp } from 'firebase/firestore';
+import { db } from "../config/firebase.config.js";
+import {
+  collection,
+  addDoc,
+  getDoc,
+  getDocs,
+  doc,
+  query,
+  where,
+  orderBy,
+  updateDoc,
+  Timestamp,
+  limit,
+} from "firebase/firestore";
 
 /**
  * Order Service
@@ -32,13 +44,13 @@ const orderService = {
         paymentIntentId,
         shippingAddress: shippingAddress || null,
         billingAddress: billingAddress || null,
-        status: 'pending', // pending, processing, shipped, delivered, cancelled
-        paymentStatus: 'pending', // pending, paid, failed, refunded
+        status: "pending", // pending, processing, shipped, delivered, cancelled
+        paymentStatus: "pending", // pending, paid, failed, refunded
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
       };
 
-      const ordersRef = collection(db, 'orders');
+      const ordersRef = collection(db, "orders");
       const docRef = await addDoc(ordersRef, order);
 
       return {
@@ -50,7 +62,7 @@ const orderService = {
         },
       };
     } catch (error) {
-      console.error('Error creating order:', error);
+      console.error("Error creating order:", error);
       return {
         success: false,
         error: error.message,
@@ -65,13 +77,13 @@ const orderService = {
    */
   async getOrderById(orderId) {
     try {
-      const orderRef = doc(db, 'orders', orderId);
+      const orderRef = doc(db, "orders", orderId);
       const orderSnap = await getDoc(orderRef);
 
       if (!orderSnap.exists()) {
         return {
           success: false,
-          error: 'Order not found',
+          error: "Order not found",
         };
       }
 
@@ -83,7 +95,7 @@ const orderService = {
         },
       };
     } catch (error) {
-      console.error('Error getting order:', error);
+      console.error("Error getting order:", error);
       return {
         success: false,
         error: error.message,
@@ -99,11 +111,8 @@ const orderService = {
    */
   async getUserOrders(userId, limit = 50) {
     try {
-      const ordersRef = collection(db, 'orders');
-      const q = query(
-        ordersRef,
-        where('userId', '==', userId)
-      );
+      const ordersRef = collection(db, "orders");
+      const q = query(ordersRef, where("userId", "==", userId));
 
       const querySnapshot = await getDocs(q);
       const orders = [];
@@ -128,7 +137,7 @@ const orderService = {
         count: orders.length,
       };
     } catch (error) {
-      console.error('Error getting user orders:', error);
+      console.error("Error getting user orders:", error);
       return {
         success: false,
         error: error.message,
@@ -145,8 +154,8 @@ const orderService = {
    */
   async updateOrderStatus(orderId, status) {
     try {
-      const orderRef = doc(db, 'orders', orderId);
-      
+      const orderRef = doc(db, "orders", orderId);
+
       await updateDoc(orderRef, {
         status,
         updatedAt: Timestamp.now(),
@@ -154,10 +163,10 @@ const orderService = {
 
       return {
         success: true,
-        message: 'Order status updated',
+        message: "Order status updated",
       };
     } catch (error) {
-      console.error('Error updating order status:', error);
+      console.error("Error updating order status:", error);
       return {
         success: false,
         error: error.message,
@@ -173,8 +182,8 @@ const orderService = {
    */
   async updatePaymentStatus(orderId, paymentStatus) {
     try {
-      const orderRef = doc(db, 'orders', orderId);
-      
+      const orderRef = doc(db, "orders", orderId);
+
       await updateDoc(orderRef, {
         paymentStatus,
         updatedAt: Timestamp.now(),
@@ -182,10 +191,10 @@ const orderService = {
 
       return {
         success: true,
-        message: 'Payment status updated',
+        message: "Payment status updated",
       };
     } catch (error) {
-      console.error('Error updating payment status:', error);
+      console.error("Error updating payment status:", error);
       return {
         success: false,
         error: error.message,
@@ -200,21 +209,24 @@ const orderService = {
    */
   async getOrderByPaymentIntentId(paymentIntentId) {
     try {
-      const ordersRef = collection(db, 'orders');
-      const q = query(ordersRef, where('paymentIntentId', '==', paymentIntentId));
+      const ordersRef = collection(db, "orders");
+      const q = query(
+        ordersRef,
+        where("paymentIntentId", "==", paymentIntentId)
+      );
 
       const querySnapshot = await getDocs(q);
 
       if (querySnapshot.empty) {
         return {
           success: false,
-          error: 'Order not found for the given payment intent ID',
+          error: "Order not found for the given payment intent ID",
         };
       }
 
       // Assuming paymentIntentId is unique, there should be only one doc
       const orderDoc = querySnapshot.docs[0];
-      
+
       return {
         success: true,
         order: {
@@ -223,7 +235,7 @@ const orderService = {
         },
       };
     } catch (error) {
-      console.error('Error getting order by payment intent ID:', error);
+      console.error("Error getting order by payment intent ID:", error);
       return {
         success: false,
         error: error.message,
@@ -236,10 +248,14 @@ const orderService = {
    * @param {number} limit - Maximum number of orders to return
    * @returns {Promise<object>} Array of all orders
    */
-  async getAllOrders(limit = 100) {
+  async getAllOrders(limitCount = 100) {
     try {
-      const ordersRef = collection(db, 'orders');
-      const q = query(ordersRef, orderBy('createdAt', 'desc'));
+      const ordersRef = collection(db, "orders");
+      const q = query(
+        ordersRef,
+        orderBy("createdAt", "desc"),
+        limit(limitCount)
+      );
 
       const querySnapshot = await getDocs(q);
       const orders = [];
@@ -257,7 +273,7 @@ const orderService = {
         count: orders.length,
       };
     } catch (error) {
-      console.error('Error getting all orders:', error);
+      console.error("Error getting all orders:", error);
       return {
         success: false,
         error: error.message,

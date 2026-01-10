@@ -1,7 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import { DollarSign, ShoppingBag, Users, TrendingUp, Package } from 'lucide-react';
-import LoadingSpinner from '../../components/common/LoadingSpinner';
-import { getAdminStats } from '../../services/adminApi';
+import React, { useEffect, useState } from "react";
+import {
+  DollarSign,
+  ShoppingBag,
+  Users,
+  TrendingUp,
+  Package,
+  Clock,
+  CheckCircle,
+  XCircle,
+} from "lucide-react";
+import LoadingSpinner from "../../components/common/LoadingSpinner";
+import { getAdminStats } from "../../services/adminApi";
 
 const StatCard = ({ title, value, icon, color, trend }) => {
   const Icon = icon;
@@ -17,7 +26,7 @@ const StatCard = ({ title, value, icon, color, trend }) => {
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 const Dashboard = () => {
@@ -26,7 +35,11 @@ const Dashboard = () => {
     revenue: 0,
     orders: 0,
     users: 0,
-    products: 0
+    products: 0,
+    averageOrderValue: 0,
+    pendingOrders: 0,
+    deliveredOrders: 0,
+    cancelledOrders: 0,
   });
   const [recentOrders, setRecentOrders] = useState([]);
 
@@ -41,40 +54,69 @@ const Dashboard = () => {
       setStats(data.stats);
       setRecentOrders(data.recentOrders);
     } catch (err) {
-      console.error('Failed to fetch stats:', err);
+      console.error("Failed to fetch stats:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <div className="flex justify-center p-12"><LoadingSpinner /></div>;
+  if (loading)
+    return (
+      <div className="flex justify-center p-12">
+        <LoadingSpinner />
+      </div>
+    );
 
   return (
     <div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatCard 
-          title="Total Revenue" 
-          value={`$${stats.revenue.toFixed(2)}`} 
-          icon={DollarSign} 
-          color="bg-green-500" 
+        <StatCard
+          title="Total Revenue"
+          value={`$${stats.revenue.toFixed(2)}`}
+          icon={DollarSign}
+          color="bg-green-500"
         />
-        <StatCard 
-          title="Total Orders" 
-          value={stats.orders} 
-          icon={ShoppingBag} 
-          color="bg-blue-500" 
+        <StatCard
+          title="Total Orders"
+          value={stats.orders}
+          icon={ShoppingBag}
+          color="bg-blue-500"
         />
-        <StatCard 
-          title="Active Users" 
-          value={stats.users} 
-          icon={Users} 
-          color="bg-purple-500" 
+        <StatCard
+          title="Active Users"
+          value={stats.users}
+          icon={Users}
+          color="bg-purple-500"
         />
-        <StatCard 
-          title="Total Products" 
-          value={stats.products} 
-          icon={Package} 
-          color="bg-orange-500" 
+        <StatCard
+          title="Total Products"
+          value={stats.products}
+          icon={Package}
+          color="bg-orange-500"
+        />
+        <StatCard
+          title="Avg. Order Value"
+          value={`$${stats.averageOrderValue?.toFixed(2) || "0.00"}`}
+          icon={TrendingUp}
+          color="bg-teal-500"
+        />
+        <StatCard
+          title="Pending Orders"
+          value={stats.pendingOrders || 0}
+          icon={Clock}
+          color="bg-yellow-500"
+        />
+        <StatCard
+          title="Delivered Orders"
+          value={stats.deliveredOrders || 0}
+          icon={CheckCircle}
+          color="bg-indigo-500"
+        />
+        <StatCard
+          title="Cancelled Orders"
+          value={stats.cancelledOrders || 0}
+          icon={XCircle}
+          color="bg-red-500"
         />
       </div>
 
@@ -97,20 +139,29 @@ const Dashboard = () => {
                     <td className="px-4 py-3 font-mono text-xs">{order.id}</td>
                     <td className="px-4 py-3 text-xs">{order.userEmail}</td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        order.status === 'delivered' ? 'bg-green-100 text-green-800' :
-                        order.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                        'bg-yellow-100 text-yellow-800'
-                      }`}>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                          order.status === "delivered"
+                            ? "bg-green-100 text-green-800"
+                            : order.status === "cancelled"
+                            ? "bg-red-100 text-red-800"
+                            : "bg-yellow-100 text-yellow-800"
+                        }`}
+                      >
                         {order.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-medium">${order.total?.toFixed(2)}</td>
+                    <td className="px-4 py-3 font-medium">
+                      ${order.total?.toFixed(2)}
+                    </td>
                   </tr>
                 ))}
                 {recentOrders.length === 0 && (
                   <tr>
-                    <td colSpan="4" className="px-4 py-8 text-center text-gray-500">
+                    <td
+                      colSpan="4"
+                      className="px-4 py-8 text-center text-gray-500"
+                    >
                       No recent orders.
                     </td>
                   </tr>

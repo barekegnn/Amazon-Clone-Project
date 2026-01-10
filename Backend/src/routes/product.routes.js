@@ -5,7 +5,8 @@ import {
   createProduct, 
   updateProduct, 
   deleteProduct,
-  getCategories 
+  getCategories,
+  seedProducts
 } from '../controllers/product.controller.js';
 import { requireAuth, requireRole } from '../middlewares/auth.middleware.js';
 
@@ -13,6 +14,7 @@ const router = Router();
 
 // Public routes
 router.get('/', getProducts);
+router.post('/seed', seedProducts);
 router.get('/categories', getCategories); // Specific path before :id
 router.get('/:id', getProductById);
 

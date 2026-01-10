@@ -107,7 +107,7 @@ const Orders = () => {
                         View order details
                       </Link>
                       <span className="text-gray-300">|</span>
-                      <Link to="#" className="text-blue-600 hover:underline">
+                      <Link to={`/orders/${order.id}`} className="text-blue-600 hover:underline">
                         Invoice
                       </Link>
                     </div>
