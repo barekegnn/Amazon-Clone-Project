@@ -4,10 +4,11 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  SECRETS_SCAN_ENABLED = "false"
 
 [[redirects]]
   from = "/api/*"
-  to = "https://barekegn-amazon-backend.onrender.com/api/:splat"
+  to = "https://amazon-clone-project-kv7m.onrender.com/api/:splat"
   status = 200
 
 [[redirects]]
@@ -16,4 +17,4 @@
   status = 200
 
 [context.production.environment]
-  VITE_API_BASE_URL = "https://barekegn-amazon-backend.onrender.com"
+  VITE_API_BASE_URL = "https://amazon-clone-project-kv7m.onrender.com"
