@@ -3,6 +3,8 @@ services:
     name: barekegn-amazon-backend
     env: node
     plan: free
+    repo: https://github.com/barekegnn/Amazon-Clone-Project.git
+    rootDir: Backend
     buildCommand: "npm install"
     startCommand: "npm start"
     envVars:
