@@ -3,7 +3,7 @@
  * Handles all authentication-related API calls to the backend
  */
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://amazon-clone-project-kv7m.onrender.com';
 
 /**
  * Helper function to handle API responses

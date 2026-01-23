@@ -38,37 +38,43 @@ const Home = () => {
     const row1Cards = useMemo(() => {
         if (!allProducts.length) return [];
 
+        // Get actual products by category
+        const electronics = getCategoryProducts('electronics');
+        const garden = getCategoryProducts('garden');
+        const toys = getCategoryProducts('toys');
+        const home = getCategoryProducts('home');
+
         return [
             {
-                id: 'r1-1', title: "Gaming Accessories", linkText: "See more", variant: "quad",
-                data: [
-                    findProduct("Gaming Headsets"),
-                    findProduct("Gaming Keyboards"),
-                    findProduct("Gaming Mice"),
-                    findProduct("Gaming Chairs")
-                ].filter(Boolean).map(p => ({ label: p.title.split(' ')[1] || "Gaming", image: p.image, id: p.id, price: p.price }))
+                id: 'r1-1', title: "Electronics", linkText: "See more", variant: "quad",
+                data: electronics.slice(0, 4).map(p => ({ 
+                    label: p.title.split(' ')[0] || "Electronics", 
+                    image: p.image, 
+                    id: p.id, 
+                    price: p.price 
+                }))
             },
             {
-                id: 'r1-2', title: "Deals in PCs", linkText: "Shop now", variant: "single",
+                id: 'r1-2', title: "Computers", linkText: "Shop now", variant: "single",
                 data: (() => {
-                    const p = findProduct("Gaming Desktop PC");
-                    return p ? { image: p.image, id: p.id, price: p.price } : null;
+                    const laptop = findProduct("Laptop");
+                    return laptop ? { image: laptop.image, id: laptop.id, price: laptop.price } : null;
                 })()
             },
             {
-                id: 'r1-3', title: "Refresh your space", linkText: "See more", variant: "quad",
-                data: [
-                    findProduct("Dining Sets"),
-                    findProduct("Home Decor"),
-                    findProduct("Kitchen Essentials"),
-                    findProduct("Health & Wellness")
-                ].filter(Boolean).map(p => ({ label: p.title.split(' ')[0], image: p.image, id: p.id, price: p.price }))
+                id: 'r1-3', title: "Home & Garden", linkText: "See more", variant: "quad",
+                data: [...garden.slice(0, 2), ...home.slice(0, 2)].map(p => ({ 
+                    label: p.title.split(' ')[0], 
+                    image: p.image, 
+                    id: p.id, 
+                    price: p.price 
+                }))
             },
             {
                 id: 'r1-4', title: "Toys & Games", linkText: "Shop now", variant: "single",
                 data: (() => {
-                    const p = findProduct("Toys & Games Box");
-                    return p ? { image: p.image, id: p.id, price: p.price } : null;
+                    const toy = toys[0];
+                    return toy ? { image: toy.image, id: toy.id, price: toy.price } : null;
                 })()
             }
         ];
@@ -78,35 +84,39 @@ const Home = () => {
     const row2Cards = useMemo(() => {
          if (!allProducts.length) return [];
 
+         // Get actual products by category
+         const books = getCategoryProducts('books');
+         const pets = getCategoryProducts('pets');
+         const health = getCategoryProducts('health');
+         const tools = getCategoryProducts('tools');
+
          return [
             {
-                 id: 'r2-1', title: "Amazon Basics", linkText: "See more", variant: "single",
+                 id: 'r2-1', title: "Tools", linkText: "See more", variant: "single",
                  data: (() => {
-                    const p = findProduct("Amazon Basics Item");
-                    return p ? { image: p.image, id: p.id, price: p.price } : null;
+                    const tool = tools[0];
+                    return tool ? { image: tool.image, id: tool.id, price: tool.price } : null;
                  })()
             },
             {
-                 id: 'r2-2', title: "Electronics", linkText: "See more", variant: "single",
+                 id: 'r2-2', title: "Books", linkText: "See more", variant: "single",
                  data: (() => {
-                    const p = findProduct("Electronics Bundle");
-                    return p ? { image: p.image, id: p.id, price: p.price } : null;
+                    const book = books[0];
+                    return book ? { image: book.image, id: book.id, price: book.price } : null;
                  })()
             },
             {
-                 id: 'r2-3', title: "Home & Kitchen", linkText: "Shop now", variant: "quad",
+                 id: 'r2-3', title: "Home & Living", linkText: "Shop now", variant: "quad",
                  data: [
-                    findProduct("Kitchen Essentials"), // Repeats allowed
-                    findProduct("Home Decor 2"),
-                    findProduct("Bedding"),
-                    findProduct("Towers")
-                 ].filter(Boolean).map(p => ({ label: p.title.split(' ')[0], image: p.image, id: p.id, price: p.price }))
+                    ...home.slice(0, 2),
+                    ...health.slice(0, 2)
+                 ].map(p => ({ label: p.title.split(' ')[0], image: p.image, id: p.id, price: p.price }))
             },
             {
-                 id: 'r2-4', title: "Beauty Picks", linkText: "Shop now", variant: "single",
+                 id: 'r2-4', title: "Pet Supplies", linkText: "Shop now", variant: "single",
                  data: (() => {
-                    const p = findProduct("Beauty Selection");
-                    return p ? { image: p.image, id: p.id, price: p.price } : null;
+                    const pet = pets[0];
+                    return pet ? { image: pet.image, id: pet.id, price: pet.price } : null;
                  })()
             }
         ];
@@ -116,35 +126,38 @@ const Home = () => {
     const row4Cards = useMemo(() => {
         if (!allProducts.length) return [];
         
+        // Get actual products by category
+        const computers = getCategoryProducts('computers');
+        
         return [
             {
-                 id: 'r4-1', title: "Easy Returns", linkText: "Learn more", variant: "single",
+                 id: 'r4-1', title: "Health Care", linkText: "Learn more", variant: "single",
                  data: (() => {
-                    const p = findProduct("Easy Returns");
-                    return p ? { image: p.image, id: p.id, price: p.price } : null;
+                    const health = findProduct("Health Care Kit");
+                    return health ? { image: health.image, id: health.id, price: health.price } : null;
                  })()
             },
             {
-                 id: 'r4-2', title: "Discover Fashion", linkText: "See more", variant: "quad",
-                 data: [
-                    findProduct("Jeans"),
-                    findProduct("Tops"),
-                    findProduct("Dresses"),
-                    findProduct("Shoes")
-                 ].filter(Boolean).map(p => ({ label: p.title, image: p.image, id: p.id, price: p.price }))
+                 id: 'r4-2', title: "Books Collection", linkText: "See more", variant: "quad",
+                 data: books.slice(0, 4).map(p => ({ 
+                    label: p.title.split(' ')[0], 
+                    image: p.image, 
+                    id: p.id, 
+                    price: p.price 
+                }))
             },
             {
-                 id: 'r4-3', title: "Fitness Needs", linkText: "Shop now", variant: "single",
+                 id: 'r4-3', title: "Garden Tools", linkText: "Shop now", variant: "single",
                  data: (() => {
-                    const p = findProduct("Fitness Equipment");
-                    return p ? { image: p.image, id: p.id, price: p.price } : null;
+                    const gardenTool = garden[0];
+                    return gardenTool ? { image: gardenTool.image, id: gardenTool.id, price: gardenTool.price } : null;
                  })()
             },
             {
-                 id: 'r4-4', title: "Kindle E-readers", linkText: "Shop now", variant: "single",
+                 id: 'r4-4', title: "Computers", linkText: "Shop now", variant: "single",
                  data: (() => {
-                    const p = findProduct("Kindle E-reader");
-                    return p ? { image: p.image, id: p.id, price: p.price } : null;
+                    const computer = computers[0];
+                    return computer ? { image: computer.image, id: computer.id, price: computer.price } : null;
                  })()
             }
         ];
