@@ -13,6 +13,7 @@ import Home from './pages/Home';
 // Lazy load other pages
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
+const Profile = lazy(() => import('./pages/Profile'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const Orders = lazy(() => import('./pages/Orders')); // Real Orders Page
 const OrderDetail = lazy(() => import('./pages/OrderDetail'));
@@ -95,7 +96,7 @@ const App = () => {
           } />
           <Route path="account" element={
             <ProtectedRoute>
-              <Placeholder pageTitle="Your Account" />
+              <Profile />
             </ProtectedRoute>
           } />
           
