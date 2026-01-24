@@ -39,8 +39,8 @@ const Register = () => {
       <Link to="/" className="mb-6">
         <img
           className="h-8 object-contain"
-          src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
-          alt="Amazon Logo"
+          src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjMwIiB2aWV3Qm94PSIwIDAgMTAwIDMwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8dGV4dCB4PSI1IiB5PSIyMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI0ZGRjkwMCI+Wm9uLUNsb25lPC90ZXh0Pgo8L3N2Zz4K"
+          alt="Zon-Clone Logo"
         />
       </Link>
 
@@ -108,14 +108,12 @@ const Register = () => {
             className="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-900 font-semibold py-2 rounded-md transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             disabled={loading}
           >
-            {loading ? <LoadingSpinner size="sm" /> : 'Create your Amazon account'}
+            {loading ? <LoadingSpinner size="sm" /> : 'Create your Zon-Clone account'}
           </button>
         </form>
 
         <p className="text-xs text-gray-600 mt-4">
-          By creating an account, you agree to Amazon's Conditions of Use & Sale. Please
-          see our Privacy Notice, our Cookies Notice and our Interest-Based Ads
-          Notice.
+          By creating an account, you agree to Zon-Clone's demo Conditions of Use & Sale. This is a portfolio project - no real transactions are processed.
         </p>
 
         <div className="mt-4 border-t border-gray-200 pt-4 text-center">

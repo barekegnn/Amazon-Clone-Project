@@ -1,6 +1,6 @@
 import { getAuthToken } from './authApi';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://amazon-clone-project-kv7m.onrender.com';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 /**
  * Helper function to handle requests

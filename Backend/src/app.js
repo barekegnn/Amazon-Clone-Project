@@ -20,7 +20,20 @@ const app = express();
 
 // Global middlewares
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_ORIGIN ?? '*', credentials: true }));
+// CORS configuration - allow both local development and production
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://barekegn-amazon-frontend.netlify.app',
+  process.env.CLIENT_ORIGIN
+].filter(Boolean);
+
+app.use(cors({ 
+  origin: allowedOrigins, 
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 // Stripe webhook needs raw body for signature verification
 // Use JSON parser for all routes EXCEPT webhook

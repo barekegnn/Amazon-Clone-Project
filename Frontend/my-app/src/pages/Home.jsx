@@ -13,11 +13,12 @@ const Home = () => {
         // Fetch all products (limit 1000 to get everything)
         getProducts({ limit: 1000 })
             .then(data => {
-                setAllProducts(data);
+                setAllProducts(data || []);
                 setLoading(false);
             })
             .catch(err => {
                 console.error("Failed to fetch products:", err);
+                setAllProducts([]);
                 setLoading(false);
             });
     }, []);
@@ -34,36 +35,38 @@ const Home = () => {
         return allProducts.filter(p => p.category === category);
     };
 
-    // --- ROW 1 DATA ---
+    // --- ROW 1 DATA - Use actual products from database ---
     const row1Cards = useMemo(() => {
         if (!allProducts.length) return [];
 
-        // Get actual products by category
-        const electronics = getCategoryProducts('electronics');
-        const garden = getCategoryProducts('garden');
-        const toys = getCategoryProducts('toys');
-        const home = getCategoryProducts('home');
+        // Get first 4 products for featured section
+        const featuredProducts = allProducts.slice(0, 4);
+        
+        // Find products by category for specific sections
+        const toolsProducts = allProducts.filter(p => p.category === 'tools');
+        const gardenProducts = allProducts.filter(p => p.category === 'garden');
 
         return [
             {
-                id: 'r1-1', title: "Electronics", linkText: "See more", variant: "quad",
-                data: electronics.slice(0, 4).map(p => ({ 
-                    label: p.title.split(' ')[0] || "Electronics", 
+                id: 'r1-1', title: "Featured Products", linkText: "See more", variant: "quad",
+                data: featuredProducts.map(p => ({ 
+                    label: p.title.split(' ')[0] || "Product", 
                     image: p.image, 
                     id: p.id, 
                     price: p.price 
                 }))
             },
             {
-                id: 'r1-2', title: "Computers", linkText: "Shop now", variant: "single",
-                data: (() => {
-                    const laptop = findProduct("Laptop");
-                    return laptop ? { image: laptop.image, id: laptop.id, price: laptop.price } : null;
-                })()
+                id: 'r1-2', title: "Tools & Equipment", linkText: "Shop now", variant: "single",
+                data: toolsProducts.length > 0 ? { 
+                    image: toolsProducts[0].image, 
+                    id: toolsProducts[0].id, 
+                    price: toolsProducts[0].price 
+                } : null
             },
             {
-                id: 'r1-3', title: "Home & Garden", linkText: "See more", variant: "quad",
-                data: [...garden.slice(0, 2), ...home.slice(0, 2)].map(p => ({ 
+                id: 'r1-3', title: "Garden Essentials", linkText: "See more", variant: "quad",
+                data: gardenProducts.slice(0, 4).map(p => ({ 
                     label: p.title.split(' ')[0], 
                     image: p.image, 
                     id: p.id, 
@@ -71,138 +74,137 @@ const Home = () => {
                 }))
             },
             {
-                id: 'r1-4', title: "Toys & Games", linkText: "Shop now", variant: "single",
-                data: (() => {
-                    const toy = toys[0];
-                    return toy ? { image: toy.image, id: toy.id, price: toy.price } : null;
-                })()
+                id: 'r1-4', title: "Best Sellers", linkText: "Shop now", variant: "single",
+                data: allProducts.length > 4 ? { 
+                    image: allProducts[4].image, 
+                    id: allProducts[4].id, 
+                    price: allProducts[4].price 
+                } : null
             }
         ];
     }, [allProducts]);
 
-    // --- ROW 2 DATA ---
+    // --- ROW 2 DATA - Use actual products from database ---
     const row2Cards = useMemo(() => {
          if (!allProducts.length) return [];
 
-         // Get actual products by category
-         const books = getCategoryProducts('books');
-         const pets = getCategoryProducts('pets');
-         const health = getCategoryProducts('health');
-         const tools = getCategoryProducts('tools');
+         const remainingProducts = allProducts.slice(5, 9); // Next 4 products
 
          return [
             {
-                 id: 'r2-1', title: "Tools", linkText: "See more", variant: "single",
-                 data: (() => {
-                    const tool = tools[0];
-                    return tool ? { image: tool.image, id: tool.id, price: tool.price } : null;
-                 })()
+                id: 'r2-1', title: "Zon-Clone Basics", linkText: "See more", variant: "single",
+                data: remainingProducts.length > 0 ? { 
+                    image: remainingProducts[0]?.image, 
+                    id: remainingProducts[0]?.id, 
+                    price: remainingProducts[0]?.price 
+                } : null
             },
             {
-                 id: 'r2-2', title: "Books", linkText: "See more", variant: "single",
-                 data: (() => {
-                    const book = books[0];
-                    return book ? { image: book.image, id: book.id, price: book.price } : null;
-                 })()
+                 id: 'r2-2', title: "Electronics", linkText: "See more", variant: "single",
+                 data: remainingProducts.length > 1 ? { 
+                    image: remainingProducts[1]?.image, 
+                    id: remainingProducts[1]?.id, 
+                    price: remainingProducts[1]?.price 
+                 } : null
             },
             {
-                 id: 'r2-3', title: "Home & Living", linkText: "Shop now", variant: "quad",
-                 data: [
-                    ...home.slice(0, 2),
-                    ...health.slice(0, 2)
-                 ].map(p => ({ label: p.title.split(' ')[0], image: p.image, id: p.id, price: p.price }))
-            },
-            {
-                 id: 'r2-4', title: "Pet Supplies", linkText: "Shop now", variant: "single",
-                 data: (() => {
-                    const pet = pets[0];
-                    return pet ? { image: pet.image, id: pet.id, price: pet.price } : null;
-                 })()
-            }
-        ];
-    }, [allProducts]);
-
-    // --- ROW 4 DATA ---
-    const row4Cards = useMemo(() => {
-        if (!allProducts.length) return [];
-        
-        // Get actual products by category
-        const computers = getCategoryProducts('computers');
-        
-        return [
-            {
-                 id: 'r4-1', title: "Health Care", linkText: "Learn more", variant: "single",
-                 data: (() => {
-                    const health = findProduct("Health Care Kit");
-                    return health ? { image: health.image, id: health.id, price: health.price } : null;
-                 })()
-            },
-            {
-                 id: 'r4-2', title: "Books Collection", linkText: "See more", variant: "quad",
-                 data: books.slice(0, 4).map(p => ({ 
+                 id: 'r2-3', title: "Home & Kitchen", linkText: "Shop now", variant: "quad",
+                 data: remainingProducts.slice(2, 6).map(p => ({ 
                     label: p.title.split(' ')[0], 
                     image: p.image, 
                     id: p.id, 
                     price: p.price 
-                }))
+                 }))
             },
             {
-                 id: 'r4-3', title: "Garden Tools", linkText: "Shop now", variant: "single",
-                 data: (() => {
-                    const gardenTool = garden[0];
-                    return gardenTool ? { image: gardenTool.image, id: gardenTool.id, price: gardenTool.price } : null;
-                 })()
-            },
-            {
-                 id: 'r4-4', title: "Computers", linkText: "Shop now", variant: "single",
-                 data: (() => {
-                    const computer = computers[0];
-                    return computer ? { image: computer.image, id: computer.id, price: computer.price } : null;
-                 })()
+                 id: 'r2-4', title: "Beauty Picks", linkText: "Shop now", variant: "single",
+                 data: remainingProducts.length > 6 ? { 
+                    image: remainingProducts[6]?.image, 
+                    id: remainingProducts[6]?.id, 
+                    price: remainingProducts[6]?.price 
+                 } : null
             }
         ];
     }, [allProducts]);
 
-    // --- ROW 6 & 7 (Simplified for space, but dynamic) ---
+    // --- ROW 4 DATA - Use actual products from database ---
+    const row4Cards = useMemo(() => {
+        if (!allProducts.length) return [];
+        
+        const moreProducts = allProducts.slice(9, 13); // Next 4 products
+        
+        return [
+            {
+                 id: 'r4-1', title: "Easy Returns", linkText: "Learn more", variant: "single",
+                 data: moreProducts.length > 0 ? { 
+                    image: moreProducts[0]?.image, 
+                    id: moreProducts[0]?.id, 
+                    price: moreProducts[0]?.price 
+                 } : null
+            },
+            {
+                 id: 'r4-2', title: "Discover Fashion", linkText: "See more", variant: "quad",
+                 data: moreProducts.slice(1, 5).map(p => ({ 
+                    label: p.title, 
+                    image: p.image, 
+                    id: p.id, 
+                    price: p.price 
+                 }))
+            },
+            {
+                 id: 'r4-3', title: "Fitness Needs", linkText: "Shop now", variant: "single",
+                 data: moreProducts.length > 5 ? { 
+                    image: moreProducts[5]?.image, 
+                    id: moreProducts[5]?.id, 
+                    price: moreProducts[5]?.price 
+                 } : null
+            },
+            {
+                 id: 'r4-4', title: "Tech Accessories", linkText: "Shop now", variant: "single",
+                 data: moreProducts.length > 6 ? { 
+                    image: moreProducts[6]?.image, 
+                    id: moreProducts[6]?.id, 
+                    price: moreProducts[6]?.price 
+                 } : null
+            }
+        ];
+    }, [allProducts]);
+
+    // --- ROW 6 & 7 - Use actual products from database ---
      const row6Cards = useMemo(() => {
         if (!allProducts.length) return [];
 
+        const evenMoreProducts = allProducts.slice(13, 17); // Next 4 products
+
         return [
             { id: 'r6-1', title: "Shop Laptops", linkText: "See more", variant: "single", 
-              data: (() => { const p = findProduct("Laptop"); return p ? { image: p.image, id: p.id } : null; })() },
+              data: evenMoreProducts.length > 0 ? { image: evenMoreProducts[0]?.image, id: evenMoreProducts[0]?.id } : null },
             { id: 'r6-2', title: "Health & Care", linkText: "Shop now", variant: "single", 
-              data: (() => { const p = findProduct("Health Care Kit"); return p ? { image: p.image, id: p.id } : null; })() },
+              data: evenMoreProducts.length > 1 ? { image: evenMoreProducts[1]?.image, id: evenMoreProducts[1]?.id } : null },
             { id: 'r6-3', title: "Deals on Tools", linkText: "Shop now", variant: "single", 
-              data: (() => { const p = findProduct("Power Tools"); return p ? { image: p.image, id: p.id } : null; })() }, // Matched Power Tools
+              data: evenMoreProducts.length > 2 ? { image: evenMoreProducts[2]?.image, id: evenMoreProducts[2]?.id } : null },
             { id: 'r6-4', title: "New Toys", linkText: "See more", variant: "quad",
-                 data: [
-                    findProduct("Action Figures"),
-                    findProduct("Dolls"),
-                    findProduct("Bikes & Ride-ons"),
-                    findProduct("Arts & Crafts")
-                 ].filter(Boolean).map(p => ({ label: p.title, image: p.image, id: p.id }))
+                 data: evenMoreProducts.slice(3, 7).map(p => ({ label: p.title, image: p.image, id: p.id }))
             }
         ];
      }, [allProducts]);
      
-    // Row 7 Cards
+    // Row 7 Cards - Use actual products from database
     const row7Cards = useMemo(() => {
         if (!allProducts.length) return [];
+        
+        const finalProducts = allProducts.slice(17, 21); // Next 4 products
+        
         return [
              { id: 'r7-1', title: "Pet Supplies", linkText: "Shop now", variant: "single",
-                data: (() => { const p = findProduct("Pet Supplies"); return p ? { image: p.image, id: p.id } : null; })() },
+                data: finalProducts.length > 0 ? { image: finalProducts[0]?.image, id: finalProducts[0]?.id } : null },
              { id: 'r7-2', title: "Smartwatches", linkText: "Shop now", variant: "single",
-                data: (() => { const p = findProduct("Smartwatch"); return p ? { image: p.image, id: p.id } : null; })() },
-             { id: 'r7-3', title: "Strip Lights", linkText: "Shop now", variant: "single", // moved strip lights down
-                data: (() => { const p = findProduct("Strip Lights"); return p ? { image: p.image, id: p.id } : null; })() },
+                data: finalProducts.length > 1 ? { image: finalProducts[1]?.image, id: finalProducts[1]?.id } : null },
+             { id: 'r7-3', title: "Strip Lights", linkText: "Shop now", variant: "single",
+                data: finalProducts.length > 2 ? { image: finalProducts[2]?.image, id: finalProducts[2]?.id } : null },
              { id: 'r7-4', title: "Gardening", linkText: "See more", variant: "quad",
-                 data: [
-                    findProduct("Outdoor Decor"),
-                    findProduct("Furniture"),
-                    findProduct("Lawn Care"),
-                    findProduct("Gardening Tools")
-                 ].filter(Boolean).map(p => ({ label: p.title, image: p.image, id: p.id }))
-             }
+                 data: finalProducts.slice(3, 7).map(p => ({ label: p.title, image: p.image, id: p.id }))
+            }
         ]
     }, [allProducts]);
 

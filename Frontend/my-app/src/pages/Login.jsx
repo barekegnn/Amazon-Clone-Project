@@ -36,12 +36,15 @@ const Login = () => {
       <Link to="/" className="mb-6">
         <img
           className="h-8 object-contain"
-          src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
-          alt="Amazon Logo"
+          src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjMwIiB2aWV3Qm94PSIwIDAgMTAwIDMwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8dGV4dCB4PSI1IiB5PSIyMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI0ZGRjkwMCI+Wm9uLUNsb25lPC90ZXh0Pgo8L3N2Zz4K"
+          alt="Zon-Clone Logo"
         />
       </Link>
 
       <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md">
+        <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 px-3 py-2 rounded mb-4 text-sm text-center">
+          ⚠️ Demo Login - Use any email/password to continue
+        </div>
         <h1 className="text-2xl font-semibold mb-4">Sign-In</h1>
 
         <ErrorMessage 
@@ -99,18 +102,16 @@ const Login = () => {
         </div>
 
         <p className="text-xs text-gray-600 mt-4">
-          By signing-in you agree to Amazon's Conditions of Use & Sale. Please
-          see our Privacy Notice, our Cookies Notice and our Interest-Based Ads
-          Notice.
+          By signing-in you agree to Zon-Clone's demo Conditions of Use & Sale. This is a portfolio project - no real transactions are processed.
         </p>
 
         <div className="mt-4 border-t border-gray-200 pt-4 text-center">
-          <p className="text-sm text-gray-600 mb-2">New to Amazon?</p>
+          <p className="text-sm text-gray-600 mb-2">New to Zon-Clone?</p>
           <Link 
             to="/register" 
             className="block w-full bg-gray-200 hover:bg-gray-300 text-gray-900 font-semibold py-2 rounded-md transition-colors duration-200"
           >
-            Create your Amazon account
+            Create your Zon-Clone account
           </Link>
         </div>
       </div>

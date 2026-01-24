@@ -134,6 +134,9 @@ const PaymentForm = () => {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="bg-red-100 border border-red-400 text-red-800 px-3 py-2 rounded mb-4 text-sm text-center">
+        ⚠️ Demo Payment - No real charges will be made. This is a portfolio project.
+      </div>
       <h3 className="text-lg font-bold mb-4 border-b pb-2">Payment Method</h3>
       
       {error && <ErrorMessage message={error} onClose={() => setError(null)} />}
@@ -183,7 +186,7 @@ const PaymentForm = () => {
         </button>
         
         <p className="mt-4 text-xs text-center text-gray-500">
-          By placing your order, you agree to Amazon's privacy notice and conditions of use.
+          By placing your order, you agree to Zon-Clone's demo privacy notice and conditions of use. This is a portfolio project - no real transactions are processed.
         </p>
       </form>
     </div>

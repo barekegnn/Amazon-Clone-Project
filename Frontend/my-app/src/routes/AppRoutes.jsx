@@ -29,7 +29,7 @@ function AppRoutes() {
           <Route path="/registry" element={<App><Placeholder pageTitle="Registry" /></App>} />
           <Route path="/gift-cards" element={<App><Placeholder pageTitle="Gift Cards" /></App>} />
           <Route path="/customer-service" element={<App><Placeholder pageTitle="Customer Service" /></App>} />
-          <Route path="/sell" element={<App><Placeholder pageTitle="Sell on Amazon" /></App>} />
+          <Route path="/sell" element={<App><Placeholder pageTitle="Sell on Zon-Clone" /></App>} />
           <Route path="/gp/delivery/ajax/address-change.html" element={<App><Placeholder pageTitle="Change Address" /></App>} />
           <Route path="/gp/customer-preferences/select-language" element={<App><Placeholder pageTitle="Select Language" /></App>} />
           <Route path="/category/*" element={<App><CategoryPage /></App>} />

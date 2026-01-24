@@ -202,11 +202,11 @@ function Header(_props: HeaderProps) {
           <Link
             to="/"
             className="flex items-center p-1.5 border border-transparent hover:border-white focus:outline-none focus:border-white rounded-sm"
-            aria-label="Amazon home"
+            aria-label="Zon-Clone home"
           >
             <img
-              src="https://pngimg.com/uploads/amazon/small/amazon_PNG11.png"
-              alt="Amazon"
+              src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTAwIiBoZWlnaHQ9IjMwIiB2aWV3Qm94PSIwIDAgMTAwIDMwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgo8dGV4dCB4PSI1IiB5PSIyMCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE4IiBmb250LXdlaWdodD0iYm9sZCIgZmlsbD0iI0ZGRjkwMCI+Wm9uLUNsb25lPC90ZXh0Pgo8L3N2Zz4K"
+              alt="Zon-Clone"
               className="h-6 sm:h-7 md:h-7 pt-1 object-contain"
             />
           </Link>
@@ -246,7 +246,7 @@ function Header(_props: HeaderProps) {
             }}
           >
             <label className="sr-only" htmlFor="header-search-input">
-              Search Amazon
+              Search Zon-Clone
             </label>
             <div className="relative h-full flex-shrink-0">
               <select
@@ -268,7 +268,7 @@ function Header(_props: HeaderProps) {
               id="header-search-input"
               className="flex-1 h-full px-3 text-base text-gray-900 border-none outline-none placeholder-gray-600 bg-white"
               type="text"
-              placeholder="Search Amazon"
+              placeholder="Search Zon-Clone"
               value={searchQuery}
               onChange={(e) => {
                 const next = e.target.value;
@@ -520,13 +520,13 @@ function Header(_props: HeaderProps) {
             }}
           >
             <label className="sr-only" htmlFor="header-search-input-mobile">
-              Search Amazon
+              Search Zon-Clone
             </label>
             <input
               id="header-search-input-mobile"
               className="flex-1 h-full px-3 text-base text-gray-900 border-none outline-none placeholder-gray-600 bg-white"
               type="text"
-              placeholder="Search Amazon"
+              placeholder="Search Zon-Clone"
               value={searchQuery}
               onChange={(e) => {
                 const next = e.target.value;

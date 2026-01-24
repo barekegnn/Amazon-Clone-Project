@@ -1,7 +1,7 @@
 // Application-wide constants for consistent styling and configuration
 
 export const COLORS = {
-  // Amazon brand colors
+  // Zon-Clone brand colors
   primary: '#FF9900',
   primaryHover: '#FA8900',
   primaryDark: '#E87B00',
@@ -111,23 +111,23 @@ export const API_CONFIG = {
 
 export const CART_CONFIG = {
   maxQuantity: 10,
-  storageKey: 'amazonCloneCartTS',
-  savedForLaterKey: 'amazonCloneSavedForLater',
+  storageKey: 'zonCloneCartTS',
+  savedForLaterKey: 'zonCloneSavedForLater',
 } as const;
 
 export const PRODUCT_CONFIG = {
-  recentlyViewedKey: 'amazonCloneRecentlyViewed',
+  recentlyViewedKey: 'zonCloneRecentlyViewed',
   recentlyViewedLimit: 10,
-  wishlistKey: 'amazonCloneWishlist',
+  wishlistKey: 'zonCloneWishlist',
 } as const;
 
 export const USER_PREFERENCES = {
-  themeKey: 'amazonCloneTheme',
-  languageKey: 'amazonCloneLanguage',
-  currencyKey: 'amazonCloneCurrency',
+  themeKey: 'zonCloneTheme',
+  languageKey: 'zonCloneLanguage',
+  currencyKey: 'zonCloneCurrency',
 } as const;
 
 export const DEMO_MODE = {
   enabled: true,
-  bannerDismissedKey: 'amazonCloneDemoBannerDismissed',
+  bannerDismissedKey: 'zonCloneDemoBannerDismissed',
 } as const;
