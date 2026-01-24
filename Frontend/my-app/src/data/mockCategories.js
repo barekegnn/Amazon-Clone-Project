@@ -42,8 +42,8 @@ export const MOCK_CATEGORIES = [
             slug: 'laptops',
             description: 'Powerful and portable solutions for work, gaming, and creativity.',
             products: [
-              { id: 'p201', title: 'Flagship Ultrabook Pro', price: 1399.99, image: 'https://m.media-amazon.com/images/I/71W690sW7WL._AC_SX679_.jpg', rating: 4.8, reviews: 350 },
-              { id: 'p202', title: 'Creator Series 16-inch', price: 2199.00, image: 'https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_SX679_.jpg', rating: 4.7, reviews: 210 }
+              { id: 'p201', title: 'Flagship Ultrabook Pro', price: 1399.99, image: '/assets/products/laptops/ultrabook-pro.jpg', rating: 4.8, reviews: 350 },
+              { id: 'p202', title: 'Creator Series 16-inch', price: 2199.00, image: '/assets/products/laptops/creator-16.jpg', rating: 4.7, reviews: 210 }
             ],
             children: [
               {
@@ -52,8 +52,8 @@ export const MOCK_CATEGORIES = [
                 slug: 'gaming',
                 description: 'Experience high-performance gaming on the go with top-of-the-line graphics and processing power.',
                 products: [
-                  { id: 'p1', title: 'Alienware m15 R7', price: 1499.99, image: 'https://m.media-amazon.com/images/I/71WrqRN6hOL._AC_SX679_.jpg', rating: 4.5, reviews: 120 },
-                  { id: 'p2', title: 'ASUS ROG Zephyrus G14', price: 1299.99, image: 'https://m.media-amazon.com/images/I/817a-KizYBL._AC_SX679_.jpg', rating: 4.8, reviews: 85 }
+                  { id: 'p1', title: 'Alienware m15 R7', price: 1499.99, image: '/assets/products/laptops/alienware-m15.jpg', rating: 4.5, reviews: 120 },
+                  { id: 'p2', title: 'ASUS ROG Zephyrus G14', price: 1299.99, image: '/assets/products/laptops/asus-rog.jpg', rating: 4.8, reviews: 85 }
                 ]
               },
               {
@@ -62,8 +62,8 @@ export const MOCK_CATEGORIES = [
                 slug: 'ultrabooks',
                 description: 'Sleek, lightweight, and powerful laptops perfect for professionals and students.',
                 products: [
-                  { id: 'p3', title: 'Dell XPS 13', price: 999.99, image: 'https://m.media-amazon.com/images/I/71W690sW7WL._AC_SX679_.jpg', rating: 4.7, reviews: 200 },
-                  { id: 'p4', title: 'MacBook Air M2', price: 1199.00, image: 'https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_SX679_.jpg', rating: 4.9, reviews: 500 }
+                  { id: 'p3', title: 'Dell XPS 13', price: 999.99, image: '/assets/products/laptops/dell-xps.jpg', rating: 4.7, reviews: 200 },
+                  { id: 'p4', title: 'MacBook Air M2', price: 1199.00, image: '/assets/products/laptops/macbook-air.jpg', rating: 4.9, reviews: 500 }
                 ]
               },
                {
@@ -87,7 +87,7 @@ export const MOCK_CATEGORIES = [
                     slug: 'all-in-one',
                     description: 'Streamlined desktops with integrated displays.',
                     products: [
-                        { id: 'p301', title: 'HP Pavilion 27"', price: 899.99, image: 'https://m.media-amazon.com/images/I/71K6W6-yCLL._AC_SX679_.jpg', rating: 4.4, reviews: 95 }
+                        { id: 'p301', title: 'HP Pavilion 27"', price: 899.99, image: '/assets/products/desktops/hp-pavilion.jpg', rating: 4.4, reviews: 95 }
                     ] 
                  },
                  {
@@ -96,7 +96,7 @@ export const MOCK_CATEGORIES = [
                     slug: 'gaming-towers',
                     description: 'The ultimate performance for esports and AAA titles.',
                     products: [
-                        { id: 'p302', title: 'CyberPowerPC Gamer Xtreme', price: 1199.99, image: 'https://m.media-amazon.com/images/I/71WrqRN6hOL._AC_SX679_.jpg', rating: 4.6, reviews: 1800 }
+                        { id: 'p302', title: 'CyberPowerPC Gamer Xtreme', price: 1199.99, image: '/assets/products/desktops/cyberpower.jpg', rating: 4.6, reviews: 1800 }
                     ]
                  }
             ]
@@ -107,8 +107,8 @@ export const MOCK_CATEGORIES = [
             slug: 'monitors',
             description: 'Upgrade your view with our selection of 4K, ultrawide, and high-refresh-rate monitors.',
             products: [
-               { id: 'p5', title: 'LG 27GP850-B UltraGear', price: 399.99, image: 'https://m.media-amazon.com/images/I/71K6W6-yCLL._AC_SX679_.jpg', rating: 4.6, reviews: 150 },
-               { id: 'p6', title: 'Dell UltraSharp U2723QE', price: 579.99, image: 'https://m.media-amazon.com/images/I/817a-KizYBL._AC_SX679_.jpg', rating: 4.9, reviews: 450 }
+               { id: 'p5', title: 'LG 27GP850-B UltraGear', price: 399.99, image: '/assets/products/monitors/lg-ultragear.jpg', rating: 4.6, reviews: 150 },
+               { id: 'p6', title: 'Dell UltraSharp U2723QE', price: 579.99, image: '/assets/products/monitors/dell-ultrasharp.jpg', rating: 4.9, reviews: 450 }
             ]
           }
         ]
@@ -132,7 +132,7 @@ export const MOCK_CATEGORIES = [
                 slug: 'mirrorless',
                 description: 'Compact size with the power of a DSLR.',
                 products: [
-                    { id: 'p401', title: 'Sony a7 IV', price: 2498.00, image: 'https://m.media-amazon.com/images/I/71f5Eu5lJSL._AC_SX679_.jpg', rating: 4.9, reviews: 780 }
+                    { id: 'p401', title: 'Sony a7 IV', price: 2498.00, image: '/assets/products/cameras/sony-a7.jpg', rating: 4.9, reviews: 780 }
                 ]
             },
         ]
@@ -176,7 +176,7 @@ export const MOCK_CATEGORIES = [
                     slug: 'dresses',
                     description: 'Shop a wide range of styles for any occasion.',
                     products: [
-                        { id: 'p501', title: 'Elegant Maxi Dress', price: 79.99, image: 'https://m.media-amazon.com/images/I/71WrqRN6hOL._AC_SX679_.jpg', rating: 4.5, reviews: 320 }
+                        { id: 'p501', title: 'Elegant Maxi Dress', price: 79.99, image: '/assets/products/clothing/maxi-dress.jpg', rating: 4.5, reviews: 320 }
                     ]
                 }
              ]
@@ -206,8 +206,8 @@ export const MOCK_CATEGORIES = [
     slug: 'books',
     description: 'Get lost in a new story. Explore bestsellers, new releases, and classics across all genres.',
     products: [
-        { id: 'p601', title: 'The Midnight Library', price: 14.99, image: 'https://m.media-amazon.com/images/I/817a-KizYBL._AC_SX679_.jpg', rating: 4.6, reviews: 150000 },
-        { id: 'p602', title: 'Atomic Habits', price: 11.98, image: 'https://m.media-amazon.com/images/I/71W690sW7WL._AC_SX679_.jpg', rating: 4.8, reviews: 85000 }
+        { id: 'p601', title: 'The Midnight Library', price: 14.99, image: '/assets/products/books/midnight-library.jpg', rating: 4.6, reviews: 150000 },
+        { id: 'p602', title: 'Atomic Habits', price: 11.98, image: '/assets/products/books/atomic-habits.jpg', rating: 4.8, reviews: 85000 }
     ],
     children: []
   }

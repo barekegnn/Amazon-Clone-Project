@@ -41,9 +41,11 @@ const Login = () => {
         />
       </Link>
 
-      <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md">
-        <div className="bg-yellow-100 border border-yellow-400 text-yellow-800 px-3 py-2 rounded mb-4 text-sm text-center">
-          ⚠️ Demo Login - Use any email/password to continue
+      <div className="w-full max-w-sm bg-white p-6 rounded-lg shadow-md border-2 border-red-200">
+        <div className="bg-red-100 border-2 border-red-400 text-red-800 px-4 py-3 rounded mb-4 text-center">
+          <p className="font-bold text-lg">⚠️ DEMO LOGIN ⚠️</p>
+          <p className="text-sm mt-1">Use any email/password to continue</p>
+          <p className="text-xs mt-2">This is NOT a real login system</p>
         </div>
         <h1 className="text-2xl font-semibold mb-4">Sign-In</h1>
 

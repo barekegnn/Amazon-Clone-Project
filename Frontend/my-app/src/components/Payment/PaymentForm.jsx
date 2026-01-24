@@ -133,9 +133,11 @@ const PaymentForm = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      <div className="bg-red-100 border border-red-400 text-red-800 px-3 py-2 rounded mb-4 text-sm text-center">
-        ⚠️ Demo Payment - No real charges will be made. This is a portfolio project.
+    <div className="bg-white p-6 rounded-lg shadow-md border-2 border-red-200">
+      <div className="bg-red-100 border-2 border-red-400 text-red-800 px-4 py-3 rounded mb-4 text-center">
+        <p className="font-bold text-lg">⚠️ DEMO PAYMENT ⚠️</p>
+        <p className="text-sm mt-1">NO real charges will be made</p>
+        <p className="text-xs mt-2">This is a portfolio project - NOT a real store</p>
       </div>
       <h3 className="text-lg font-bold mb-4 border-b pb-2">Payment Method</h3>
       
