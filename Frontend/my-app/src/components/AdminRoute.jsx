@@ -15,7 +15,7 @@ import LoadingSpinner from './common/LoadingSpinner';
  * This should be set in Firebase custom claims or user document
  */
 const AdminRoute = ({ children }) => {
-  const { user, loading, isAuthenticated } = useAuth();
+  const { user, loading, isAuthenticated, isAdmin } = useAuth();
   const location = useLocation();
 
   // Show loading spinner while checking authentication
@@ -35,13 +35,8 @@ const AdminRoute = ({ children }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check if user has admin role
-  // Note: This checks user.role which should be set in backend
-  // For now, we'll check if email contains 'admin' as a temporary solution
-  const isAdmin = user.role === 'admin' || user.email?.includes('admin');
-
-  // If not admin, redirect to home with error message
-  if (!isAdmin) {
+  // Check if user has admin role using the centralized isAdmin function
+  if (!isAdmin()) {
     return (
       <Navigate 
         to="/" 

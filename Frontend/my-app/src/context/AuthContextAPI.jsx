@@ -178,11 +178,18 @@ export const AuthProvider = ({ children }) => {
     dispatch({ type: AUTH_ACTIONS.CLEAR_ERROR });
   };
 
+  // Check if user is admin
+  const isAdmin = () => {
+    if (!state.user) return false;
+    return state.user.role === 'admin' || state.user.email?.includes('admin');
+  };
+
   const value = {
     user: state.user,
     loading: state.loading,
     error: state.error,
     isAuthenticated: state.isAuthenticated,
+    isAdmin,
     register,
     login,
     logout,

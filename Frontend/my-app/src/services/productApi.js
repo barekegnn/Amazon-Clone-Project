@@ -3,9 +3,9 @@ import { getAuthToken } from './authApi';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 /**
- * Helper function to handle requests
+ * Helper function to handle requests with retry logic
  */
-async function request(endpoint, method = 'GET', body = null, requireAuth = false) {
+async function request(endpoint, method = 'GET', body = null, requireAuth = false, retries = 2) {
   const headers = {
     'Content-Type': 'application/json',
   };
@@ -26,14 +26,36 @@ async function request(endpoint, method = 'GET', body = null, requireAuth = fals
     config.body = JSON.stringify(body);
   }
 
-  const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
-  const data = await response.json();
+  let lastError;
+  
+  // Retry logic for failed requests
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const response = await fetch(`${API_BASE_URL}${endpoint}`, config);
+      const data = await response.json();
 
-  if (!response.ok) {
-    throw new Error(data.message || data.error || 'An error occurred');
+      if (!response.ok) {
+        throw new Error(data.message || data.error || 'An error occurred');
+      }
+
+      return data;
+    } catch (error) {
+      lastError = error;
+      
+      // Don't retry on client errors (4xx) or auth errors
+      if (error.message.includes('401') || error.message.includes('403') || error.message.includes('400')) {
+        throw error;
+      }
+      
+      // Wait before retrying (exponential backoff)
+      if (attempt < retries) {
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      }
+    }
   }
-
-  return data;
+  
+  // If all retries failed, throw the last error
+  throw lastError;
 }
 
 /**

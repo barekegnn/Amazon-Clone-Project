@@ -74,6 +74,29 @@ const App = () => {
       <ScrollToTop />
       <CartDrawer />
       <Routes>
+        {/* Admin Routes - Separate from main layout (no Header/Footer) */}
+        <Route path="/admin" element={
+          <AdminRoute>
+            <AdminLayout />
+          </AdminRoute>
+        }>
+          <Route index element={<AdminDashboard />} />
+          <Route path="products" element={<AdminProductList />} />
+          <Route path="products/new" element={<AdminProductForm />} />
+          <Route path="products/:id/edit" element={<AdminProductForm />} />
+          <Route path="orders" element={<AdminOrderList />} />
+          <Route path="orders/:id" element={<AdminOrderDetail />} />
+          <Route path="users" element={<AdminUserList />} />
+        </Route>
+
+        {/* Login page - No layout */}
+        <Route path="/login" element={
+          <Suspense fallback={<div className="p-10 flex justify-center">Loading...</div>}>
+            <Login />
+          </Suspense>
+        } />
+
+        {/* Main site routes with Header/Footer */}
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           
@@ -99,21 +122,6 @@ const App = () => {
             </ProtectedRoute>
           } />
           
-          {/* Admin Routes */}
-          <Route path="/admin" element={
-            <AdminRoute>
-              <AdminLayout />
-            </AdminRoute>
-          }>
-            <Route index element={<AdminDashboard />} />
-            <Route path="products" element={<AdminProductList />} />
-            <Route path="products/new" element={<AdminProductForm />} />
-            <Route path="products/:id/edit" element={<AdminProductForm />} />
-            <Route path="orders" element={<AdminOrderList />} />
-            <Route path="orders/:id" element={<AdminOrderDetail />} />
-            <Route path="users" element={<AdminUserList />} />
-          </Route>
-          
           {/* Public Routes */}
           <Route path="register" element={<Register />} />
           <Route path="product/:id" element={<ProductDetailPage />} />
@@ -138,11 +146,6 @@ const App = () => {
           {/* Catch-all for undefined routes */}
           <Route path="*" element={<NotFound />} />
         </Route>
-        <Route path="/login" element={
-          <Suspense fallback={<div className="p-10 flex justify-center">Loading...</div>}>
-            <Login />
-          </Suspense>
-        } />
       </Routes>
     </div>
   );

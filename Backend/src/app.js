@@ -25,7 +25,10 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'https://barekegn-amazon-frontend.netlify.app',
-  process.env.CLIENT_ORIGIN
+  process.env.CLIENT_ORIGIN,
+  // Add Vercel deployment URLs (will be updated when deployed)
+  process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`,
+  'https://shopverse.vercel.app', // ShopVerse - Your creative frontend name
 ].filter(Boolean);
 
 app.use(cors({ 

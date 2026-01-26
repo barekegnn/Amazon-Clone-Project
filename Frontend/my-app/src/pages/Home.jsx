@@ -5,19 +5,15 @@ import HomeCard from '../components/Home/HomeCard';
 import ProductCarouselRow from '../components/Home/ProductCarouselRow';
 import { RecentlyViewed } from '../components/product/RecentlyViewed';
 
-console.log('🚀 Home.jsx loaded - Version 2.0 with debugging');
-
 const Home = () => {
     const [allProducts, setAllProducts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Fetch all products from backend with cache-busting
-        const timestamp = new Date().getTime();
-        getProducts({ limit: 100, _t: timestamp })
+        // Fetch all products from backend
+        getProducts({ limit: 100 })
             .then(data => {
-                console.log('📦 Products fetched from API:', data?.length || 0);
                 setAllProducts(data || []);
                 setLoading(false);
             })
@@ -34,25 +30,27 @@ const Home = () => {
         return allProducts.filter(p => p.category === category);
     };
 
+    // Get all available categories dynamically
+    const availableCategories = useMemo(() => {
+        const categories = {};
+        allProducts.forEach(p => {
+            if (!categories[p.category]) {
+                categories[p.category] = [];
+            }
+            categories[p.category].push(p);
+        });
+        return categories;
+    }, [allProducts]);
+
     // Build all card rows with STRICT uniqueness and proper allocation
     const { row1Cards, row2Cards, row3Cards } = useMemo(() => {
         if (!allProducts.length) return { row1Cards: [], row2Cards: [], row3Cards: [] };
-
-        console.log('🔍 Total products loaded:', allProducts.length);
-        console.log('📊 Products by category:', {
-            electronics: allProducts.filter(p => p.category === 'electronics').length,
-            fashion: allProducts.filter(p => p.category === 'fashion').length,
-            home: allProducts.filter(p => p.category === 'home').length,
-            sports: allProducts.filter(p => p.category === 'sports').length,
-            toys: allProducts.filter(p => p.category === 'toys').length,
-            books: allProducts.filter(p => p.category === 'books').length,
-        });
 
         // Track used product IDs globally
         const usedProductIds = new Set();
 
         // Helper to get unique products
-        const getUniqueProducts = (products, count, debugLabel) => {
+        const getUniqueProducts = (products, count) => {
             const uniqueProducts = [];
             for (const product of products) {
                 if (!usedProductIds.has(product.id) && uniqueProducts.length < count) {
@@ -60,25 +58,39 @@ const Home = () => {
                     usedProductIds.add(product.id);
                 }
             }
-            console.log(`✅ ${debugLabel}: Got ${uniqueProducts.length}/${count} products`, 
-                uniqueProducts.map(p => ({ id: p.id, title: p.title.substring(0, 30), category: p.category }))
-            );
             return uniqueProducts;
         };
 
-        // Get products by category
-        const electronicsProducts = getCategoryProducts('electronics');
-        const fashionProducts = getCategoryProducts('fashion');
-        const homeProducts = getCategoryProducts('home');
-        const sportsProducts = getCategoryProducts('sports');
-        const toysProducts = getCategoryProducts('toys');
-        const booksProducts = getCategoryProducts('books');
+        // Get category arrays (use available categories or fallback to empty)
+        const categoryNames = Object.keys(availableCategories);
+        const getCategory = (preferredNames) => {
+            for (const name of preferredNames) {
+                if (availableCategories[name] && availableCategories[name].length > 0) {
+                    return availableCategories[name];
+                }
+            }
+            // Fallback: return any category with products
+            for (const cat of categoryNames) {
+                if (availableCategories[cat].length > 0) {
+                    return availableCategories[cat];
+                }
+            }
+            return [];
+        };
+
+        // Map preferred categories to actual available categories
+        const electronicsProducts = getCategory(['electronics', 'computers', 'gaming']);
+        const fashionProducts = getCategory(['fashion', 'clothing', 'apparel']);
+        const homeProducts = getCategory(['home', 'kitchen', 'furniture', 'garden']);
+        const sportsProducts = getCategory(['sports', 'fitness', 'outdoors']);
+        const toysProducts = getCategory(['toys', 'games', 'kids']);
+        const booksProducts = getCategory(['books', 'media', 'entertainment']);
 
         // --- ROW 1: 4 Cards ---
         const row1 = [];
 
         // Card 1: Electronics (4 products)
-        const electronics1 = getUniqueProducts(electronicsProducts, 4, 'R1C1-Electronics');
+        const electronics1 = getUniqueProducts(electronicsProducts, 4);
         if (electronics1.length === 4) {
             row1.push({
                 id: 'r1-1',
@@ -96,7 +108,7 @@ const Home = () => {
         }
 
         // Card 2: Fashion (4 products)
-        const fashion1 = getUniqueProducts(fashionProducts, 4, 'R1C2-Fashion');
+        const fashion1 = getUniqueProducts(fashionProducts, 4);
         if (fashion1.length === 4) {
             row1.push({
                 id: 'r1-2',
@@ -114,7 +126,7 @@ const Home = () => {
         }
 
         // Card 3: Home (4 products)
-        const home1 = getUniqueProducts(homeProducts, 4, 'R1C3-Home');
+        const home1 = getUniqueProducts(homeProducts, 4);
         if (home1.length === 4) {
             row1.push({
                 id: 'r1-3',
@@ -132,7 +144,7 @@ const Home = () => {
         }
 
         // Card 4: Sports (1 product - SINGLE CARD)
-        const sports1 = getUniqueProducts(sportsProducts, 1, 'R1C4-Sports');
+        const sports1 = getUniqueProducts(sportsProducts, 1);
         if (sports1.length === 1) {
             row1.push({
                 id: 'r1-4',
@@ -153,7 +165,7 @@ const Home = () => {
         const row2 = [];
 
         // Card 1: Toys (4 products)
-        const toys1 = getUniqueProducts(toysProducts, 4, 'R2C1-Toys');
+        const toys1 = getUniqueProducts(toysProducts, 4);
         if (toys1.length === 4) {
             row2.push({
                 id: 'r2-1',
@@ -171,7 +183,7 @@ const Home = () => {
         }
 
         // Card 2: Books (4 products)
-        const books1 = getUniqueProducts(booksProducts, 4, 'R2C2-Books');
+        const books1 = getUniqueProducts(booksProducts, 4);
         if (books1.length === 4) {
             row2.push({
                 id: 'r2-2',
@@ -188,26 +200,26 @@ const Home = () => {
             });
         }
 
-        // Card 3: Electronics (1 UNIQUE product - SINGLE CARD) - FIX FOR MISMATCH
-        const electronics2 = getUniqueProducts(electronicsProducts, 1, 'R2C3-Electronics');
-        if (electronics2.length === 1) {
+        // Card 3: Books (1 UNIQUE product - SINGLE CARD)
+        const books2 = getUniqueProducts(booksProducts, 1);
+        if (books2.length === 1) {
             row2.push({
                 id: 'r2-3',
-                title: "Top Electronics",
+                title: "Best Selling Book",
                 linkText: "Shop deals",
                 variant: "single",
                 data: {
-                    image: electronics2[0].image,
-                    id: electronics2[0].id,
-                    price: electronics2[0].price,
-                    title: electronics2[0].title,
-                    alt: electronics2[0].title
+                    image: books2[0].image,
+                    id: books2[0].id,
+                    price: books2[0].price,
+                    title: books2[0].title,
+                    alt: books2[0].title
                 }
             });
         }
 
         // Card 4: Home (4 UNIQUE products)
-        const home2 = getUniqueProducts(homeProducts, 4, 'R2C4-Home');
+        const home2 = getUniqueProducts(homeProducts, 4);
         if (home2.length === 4) {
             row2.push({
                 id: 'r2-4',
@@ -300,11 +312,11 @@ const Home = () => {
         }
 
         return {
-            row1Cards: row1,
-            row2Cards: row2,
-            row3Cards: row3
+            row1Cards: row1.length === 4 ? row1 : [],
+            row2Cards: row2.length === 4 ? row2 : [],
+            row3Cards: row3.length === 4 ? row3 : []
         };
-    }, [allProducts]);
+    }, [allProducts, availableCategories]);
 
     if (loading) {
         return (
@@ -355,9 +367,9 @@ const Home = () => {
         );
     }
 
-    // Get products for carousels
-    const booksData = getCategoryProducts('books');
-    const sportsData = getCategoryProducts('sports');
+    // Get products for carousels (use available categories)
+    const booksData = availableCategories['books'] || availableCategories['media'] || [];
+    const sportsData = availableCategories['sports'] || availableCategories['fitness'] || [];
 
     return (
         <div className="home bg-gray-200 pb-10">
@@ -390,28 +402,6 @@ const Home = () => {
                         products={booksData} 
                     />
                 )}
-
-                {/* Row 3: Card Grid - ALWAYS 4 CARDS (NO EMPTY COLUMNS) */}
-                {row3Cards.length === 4 && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        {row3Cards.map(card => (
-                            <HomeCard key={card.id} {...card} />
-                        ))}
-                    </div>
-                )}
-
-                {/* Carousel 2: Sports & Fitness */}
-                {sportsData.length > 0 && (
-                    <ProductCarouselRow 
-                        title="Sports & Fitness Equipment" 
-                        products={sportsData} 
-                    />
-                )}
-
-                {/* Recently Viewed Products */}
-                <div className="px-4">
-                    <RecentlyViewed />
-                </div>
 
             </div>
         </div>

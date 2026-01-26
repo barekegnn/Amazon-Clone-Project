@@ -4,7 +4,6 @@ import { Search, X } from "lucide-react";
 import { useCart } from "../../contexts/CartContext";
 import { useDebounce } from "../../hooks/useDebounce";
 import { getProducts } from "../../services/productApi";
-import { ThemeToggle } from "../common/ThemeToggle";
 import { useAuth } from "../../context/AuthContextAPI"; // Using Backend API
 
 interface HeaderProps {
@@ -56,7 +55,7 @@ function Header(_props: HeaderProps) {
 
   const navigate = useNavigate();
   const { totalItems } = useCart();
-  const { user, logout } = useAuth();
+  const { user, logout, isAdmin } = useAuth();
   
   const dropdownRootRef = useRef<HTMLDivElement | null>(null);
   const lastRequestedQueryRef = useRef<string>("");
@@ -393,21 +392,49 @@ function Header(_props: HeaderProps) {
                     </p>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center p-3 bg-gray-50 border-b border-gray-200">
-                    <p className="text-sm font-semibold mb-2">
-                      {user.displayName || user.email}
-                    </p>
-                    <button
-                      onClick={async () => {
-                        await logout();
-                        setAccountDropdownOpen(false);
-                        navigate('/');
-                      }}
-                      className="bg-[#FFD814] w-48 py-1.5 rounded-md text-sm font-normal text-center shadow-sm hover:bg-[#F7CA00]"
-                    >
-                      Sign out
-                    </button>
-                  </div>
+                  <>
+                    {/* User Profile Section */}
+                    <div className="flex flex-col p-3 bg-gray-50 border-b border-gray-200">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold text-lg">
+                          {user.displayName ? user.displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) : user.email?.[0].toUpperCase()}
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-sm font-semibold text-gray-800">
+                            {user.displayName || 'User'}
+                          </p>
+                          <p className="text-xs text-gray-500 truncate">
+                            {user.email}
+                          </p>
+                        </div>
+                      </div>
+                      
+                      {/* Admin Dashboard Button - Only visible to admins */}
+                      {isAdmin() && (
+                        <Link
+                          to="/admin"
+                          className="bg-blue-600 text-white w-full py-2 rounded-md text-sm font-medium text-center shadow-sm hover:bg-blue-700 mb-2 flex items-center justify-center gap-2"
+                          onClick={() => setAccountDropdownOpen(false)}
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z" />
+                          </svg>
+                          Admin Dashboard
+                        </Link>
+                      )}
+                      
+                      <button
+                        onClick={async () => {
+                          await logout();
+                          setAccountDropdownOpen(false);
+                          navigate('/');
+                        }}
+                        className="bg-[#FFD814] w-full py-1.5 rounded-md text-sm font-normal text-center shadow-sm hover:bg-[#F7CA00]"
+                      >
+                        Sign out
+                      </button>
+                    </div>
+                  </>
                 )}
 
                 <div className="flex p-3">
@@ -472,9 +499,6 @@ function Header(_props: HeaderProps) {
             <span className="text-xs text-gray-200">Returns</span>
             <span className="text-sm font-bold">&amp; Orders</span>
           </Link>
-
-          {/* Theme Toggle */}
-          <ThemeToggle />
 
           {/* Cart */}
           <Link
@@ -750,6 +774,7 @@ function Header(_props: HeaderProps) {
 }
 
 export default Header;
+
 
 
 
