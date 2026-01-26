@@ -25,15 +25,40 @@ const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'https://barekegn-amazon-frontend.netlify.app',
-  'https://shop-verse-brown.vercel.app', // Your Vercel deployment
+  'https://shop-verse-brown.vercel.app', // Your Vercel production deployment
   process.env.CLIENT_ORIGIN,
   // Add Vercel deployment URLs (will be updated when deployed)
   process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`,
   'https://shopverse.vercel.app', // ShopVerse - Your creative frontend name
 ].filter(Boolean);
 
+// Function to check if origin is allowed (including Vercel preview URLs)
+const isOriginAllowed = (origin) => {
+  if (!origin) return false;
+  
+  // Check exact matches
+  if (allowedOrigins.includes(origin)) return true;
+  
+  // Allow all Vercel preview/deployment URLs
+  if (origin.includes('.vercel.app')) return true;
+  
+  // Allow Netlify preview URLs
+  if (origin.includes('.netlify.app')) return true;
+  
+  return false;
+};
+
 app.use(cors({ 
-  origin: allowedOrigins, 
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps, Postman, curl)
+    if (!origin) return callback(null, true);
+    
+    if (isOriginAllowed(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
