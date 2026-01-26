@@ -8,7 +8,7 @@ const HomeCard = ({ title, linkText, variant, data }) => {
 
     const createSafeProduct = (item) => ({
         id: item.id || '0',
-        title: item.label || item.title || title || 'Product',
+        title: item.title || item.label || title || 'Product',
         image: item.image,
         price: item.price || 0,
         rating: item.rating || { rate: 0, count: 0 },
@@ -30,7 +30,7 @@ const HomeCard = ({ title, linkText, variant, data }) => {
                     >
                          <img 
                             src={data.image} 
-                            alt={data.alt || title} 
+                            alt={data.alt || data.title || title} 
                             className="w-full h-full object-contain p-2"
                          />
                     </Link>
@@ -40,18 +40,24 @@ const HomeCard = ({ title, linkText, variant, data }) => {
                             <Link 
                                 to={item.id ? `/product/${item.id}` : '#'} 
                                 state={{ product: createSafeProduct(item) }}
-                                key={index} 
+                                key={item.id || index} 
                                 className="flex flex-col cursor-pointer"
                                 onClick={() => item.id && preloadProduct(createSafeProduct(item))}
                             >
                                 <div className="flex-grow relative overflow-hidden h-[110px] mb-1">
                                     <img 
                                         src={item.image} 
-                                        alt={item.label}
+                                        alt={item.title || item.label}
                                         className="w-full h-full object-contain"
                                      />
                                 </div>
-                                <span className="text-xs font-medium text-gray-800">{item.label}</span>
+                                {/* Display FULL product title - truncate with CSS for clean display */}
+                                <span 
+                                    className="text-xs font-medium text-gray-800 line-clamp-2 leading-tight" 
+                                    title={item.title || item.label}
+                                >
+                                    {item.label || item.title}
+                                </span>
                             </Link>
                         ))}
                     </div>

@@ -31,7 +31,9 @@ const productService = {
       const product = {
         ...productData,
         price: parseFloat(productData.price),
-        rating: { rate: 0, count: 0 },
+        rating: productData.rating || { rate: 0, count: 0 },
+        inStock: productData.inStock !== undefined ? productData.inStock : true,
+        description: productData.description || '',
         createdAt: Timestamp.now(),
         updatedAt: Timestamp.now(),
       };
@@ -231,6 +233,40 @@ const productService = {
          error: error.message
        }
      }
+  },
+
+  /**
+   * Delete all products (for seeding/testing)
+   * @returns {Promise<object>} Result with count
+   */
+  async deleteAllProducts() {
+    try {
+      const productsRef = collection(db, 'products');
+      const querySnapshot = await getDocs(productsRef);
+      
+      let deleteCount = 0;
+      const deletePromises = [];
+      
+      querySnapshot.forEach((docSnapshot) => {
+        deletePromises.push(deleteDoc(doc(db, 'products', docSnapshot.id)));
+        deleteCount++;
+      });
+      
+      await Promise.all(deletePromises);
+      
+      return {
+        success: true,
+        count: deleteCount,
+        message: `Deleted ${deleteCount} products`
+      };
+    } catch (error) {
+      console.error('Error deleting all products:', error);
+      return {
+        success: false,
+        error: error.message,
+        count: 0
+      };
+    }
   }
 };
 
@@ -240,7 +276,8 @@ export const {
   getProductById,
   updateProduct,
   deleteProduct,
-  getCategories
+  getCategories,
+  deleteAllProducts
 } = productService;
 
 export default productService;
