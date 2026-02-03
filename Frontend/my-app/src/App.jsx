@@ -13,6 +13,7 @@ import Home from './pages/Home';
 // Lazy load other pages
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
 const Checkout = lazy(() => import('./pages/Checkout'));
 const Orders = lazy(() => import('./pages/Orders')); // Real Orders Page
 const OrderDetail = lazy(() => import('./pages/OrderDetail'));
@@ -93,6 +94,13 @@ const App = () => {
         <Route path="/login" element={
           <Suspense fallback={<div className="p-10 flex justify-center">Loading...</div>}>
             <Login />
+          </Suspense>
+        } />
+
+        {/* Forgot Password page - No layout */}
+        <Route path="/forgot-password" element={
+          <Suspense fallback={<div className="p-10 flex justify-center">Loading...</div>}>
+            <ForgotPassword />
           </Suspense>
         } />
 
