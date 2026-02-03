@@ -5,7 +5,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000
 /**
  * Helper function to handle requests with retry logic
  */
-async function request(endpoint, method = 'GET', body = null, requireAuth = false, retries = 2) {
+async function request(endpoint, method = 'GET', body = null, requireAuth = false, retries = 1) {
   const headers = {
     'Content-Type': 'application/json',
   };
@@ -20,6 +20,8 @@ async function request(endpoint, method = 'GET', body = null, requireAuth = fals
   const config = {
     method,
     headers,
+    // Add timeout for faster failure detection
+    signal: AbortSignal.timeout(15000), // 15 second timeout
   };
 
   if (body) {
@@ -47,9 +49,14 @@ async function request(endpoint, method = 'GET', body = null, requireAuth = fals
         throw error;
       }
       
-      // Wait before retrying (exponential backoff)
+      // Don't retry on timeout errors - fail fast
+      if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+        throw new Error('Request timed out. Please check your connection.');
+      }
+      
+      // Wait before retrying (shorter backoff for faster UX)
       if (attempt < retries) {
-        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+        await new Promise(resolve => setTimeout(resolve, 500)); // 500ms instead of exponential
       }
     }
   }

@@ -11,11 +11,31 @@ const Home = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Fetch all products from backend
-        getProducts({ limit: 100 })
-            .then(data => {
-                setAllProducts(data || []);
+        // Check if products are cached in sessionStorage
+        const cachedProducts = sessionStorage.getItem('homepage_products');
+        const cacheTimestamp = sessionStorage.getItem('homepage_products_timestamp');
+        const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+        
+        // Use cached data if available and not expired
+        if (cachedProducts && cacheTimestamp) {
+            const age = Date.now() - parseInt(cacheTimestamp);
+            if (age < CACHE_DURATION) {
+                setAllProducts(JSON.parse(cachedProducts));
                 setLoading(false);
+                return;
+            }
+        }
+
+        // Fetch products from backend - reduced to 60 for faster loading
+        getProducts({ limit: 60 })
+            .then(data => {
+                const products = data || [];
+                setAllProducts(products);
+                setLoading(false);
+                
+                // Cache the products for faster subsequent loads
+                sessionStorage.setItem('homepage_products', JSON.stringify(products));
+                sessionStorage.setItem('homepage_products_timestamp', Date.now().toString());
             })
             .catch(err => {
                 console.error("Failed to fetch products:", err);
@@ -320,10 +340,55 @@ const Home = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-200 flex items-center justify-center">
-                <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 mx-auto mb-4"></div>
-                    <p className="text-gray-700">Loading Products...</p>
+            <div className="home bg-gray-200 pb-10">
+                <HeroCarousel />
+                
+                <div className="max-w-[1500px] mx-auto z-10 relative -mt-60 px-4 space-y-6">
+                    {/* Skeleton Row 1 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {[1, 2, 3, 4].map(i => (
+                            <div key={i} className="bg-white p-5 rounded-sm shadow-md animate-pulse">
+                                <div className="h-6 bg-gray-300 rounded w-3/4 mb-4"></div>
+                                <div className="grid grid-cols-2 gap-3 mb-4">
+                                    <div className="h-24 bg-gray-300 rounded"></div>
+                                    <div className="h-24 bg-gray-300 rounded"></div>
+                                    <div className="h-24 bg-gray-300 rounded"></div>
+                                    <div className="h-24 bg-gray-300 rounded"></div>
+                                </div>
+                                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    {/* Skeleton Row 2 */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                        {[1, 2, 3, 4].map(i => (
+                            <div key={i} className="bg-white p-5 rounded-sm shadow-md animate-pulse">
+                                <div className="h-6 bg-gray-300 rounded w-3/4 mb-4"></div>
+                                <div className="grid grid-cols-2 gap-3 mb-4">
+                                    <div className="h-24 bg-gray-300 rounded"></div>
+                                    <div className="h-24 bg-gray-300 rounded"></div>
+                                    <div className="h-24 bg-gray-300 rounded"></div>
+                                    <div className="h-24 bg-gray-300 rounded"></div>
+                                </div>
+                                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    {/* Skeleton Carousel */}
+                    <div className="bg-white p-5 rounded-sm shadow-md animate-pulse">
+                        <div className="h-6 bg-gray-300 rounded w-1/4 mb-4"></div>
+                        <div className="flex gap-4 overflow-hidden">
+                            {[1, 2, 3, 4, 5, 6].map(i => (
+                                <div key={i} className="flex-shrink-0 w-48">
+                                    <div className="h-48 bg-gray-300 rounded mb-2"></div>
+                                    <div className="h-4 bg-gray-300 rounded mb-2"></div>
+                                    <div className="h-4 bg-gray-300 rounded w-2/3"></div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </div>
         );

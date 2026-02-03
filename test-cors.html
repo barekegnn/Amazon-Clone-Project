@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CORS Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔧 CORS & Backend Deployment Test</h1>
+        <p>This page tests if your backend on Render has been updated with the CORS fix.</p>
+        
+        <button onclick="testBackend()">Test Backend Connection</button>
+        <button onclick="testCORS()">Test CORS Headers</button>
+        <button onclick="testProducts()">Test Products API</button>
+        
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://amazon-clone-project-kv7m.onrender.com';
+        const resultDiv = document.getElementById('result');
+
+        function showResult(message, type = 'info') {
+            resultDiv.className = `result ${type}`;
+            resultDiv.innerHTML = message;
+        }
+
+        async function testBackend() {
+            showResult('Testing backend connection...', 'loading');
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/health`);
+                const data = await response.json();
+                
+                if (data.status === 'ok') {
+                    showResult(`✅ SUCCESS: Backend is online and responding!\n\nResponse: ${JSON.stringify(data, null, 2)}`, 'success');
+                } else {
+                    showResult(`⚠️ Backend responded but status is not OK:\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ ERROR: Cannot connect to backend\n\nError: ${error.message}\n\nThis might mean:\n1. Backend is still deploying\n2. Backend is down\n3. Network issue`, 'error');
+            }
+        }
+
+        async function testCORS() {
+            showResult('Testing CORS configuration...', 'loading');
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/products?limit=1`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const corsHeader = response.headers.get('access-control-allow-origin');
+                
+                if (response.ok) {
+                    showResult(`✅ SUCCESS: CORS is working!\n\nAccess-Control-Allow-Origin: ${corsHeader || 'Not set'}\n\nThis means your Vercel frontend can now access the backend!`, 'success');
+                } else {
+                    showResult(`⚠️ Request completed but got status: ${response.status}\n\nCORS Header: ${corsHeader || 'Not set'}`, 'error');
+                }
+            } catch (error) {
+                if (error.message.includes('CORS')) {
+                    showResult(`❌ CORS ERROR: Backend is blocking requests\n\nError: ${error.message}\n\nThis means:\n1. Backend hasn't deployed the CORS fix yet\n2. Wait a few more minutes and try again`, 'error');
+                } else {
+                    showResult(`❌ ERROR: ${error.message}`, 'error');
+                }
+            }
+        }
+
+        async function testProducts() {
+            showResult('Testing Products API...', 'loading');
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/products?limit=3`);
+                const data = await response.json();
+                
+                if (data.success && data.data && data.data.length > 0) {
+                    showResult(`✅ SUCCESS: Products API is working!\n\nFound ${data.count} products\n\nFirst product:\n${JSON.stringify(data.data[0], null, 2)}`, 'success');
+                } else {
+                    showResult(`⚠️ API responded but no products found:\n${JSON.stringify(data, null, 2)}`, 'error');
+                }
+            } catch (error) {
+                showResult(`❌ ERROR: Cannot fetch products\n\nError: ${error.message}`, 'error');
+            }
+        }
+
+        // Auto-test on page load
+        window.onload = () => {
+            showResult('Click a button above to test your backend deployment', 'info');
+        };
+    </script>
+</body>
+</html>
