@@ -26,8 +26,8 @@ const Home = () => {
             }
         }
 
-        // Fetch products from backend - reduced to 60 for faster loading
-        getProducts({ limit: 60 })
+        // Fetch products from backend - need 100 for all homepage sections
+        getProducts({ limit: 100 })
             .then(data => {
                 const products = data || [];
                 setAllProducts(products);
@@ -36,6 +36,14 @@ const Home = () => {
                 // Cache the products for faster subsequent loads
                 sessionStorage.setItem('homepage_products', JSON.stringify(products));
                 sessionStorage.setItem('homepage_products_timestamp', Date.now().toString());
+                
+                // Debug: Log product count by category
+                const categoryCounts = {};
+                products.forEach(p => {
+                    categoryCounts[p.category] = (categoryCounts[p.category] || 0) + 1;
+                });
+                console.log('Products loaded:', products.length);
+                console.log('By category:', categoryCounts);
             })
             .catch(err => {
                 console.error("Failed to fetch products:", err);
@@ -337,6 +345,15 @@ const Home = () => {
             row3Cards: row3.length === 4 ? row3 : []
         };
     }, [allProducts, availableCategories]);
+
+    // Debug: Log which rows are rendering
+    useEffect(() => {
+        if (!loading && allProducts.length > 0) {
+            console.log('Row 1 cards:', row1Cards.length);
+            console.log('Row 2 cards:', row2Cards.length);
+            console.log('Row 3 cards:', row3Cards.length);
+        }
+    }, [loading, allProducts.length, row1Cards.length, row2Cards.length, row3Cards.length]);
 
     if (loading) {
         return (
