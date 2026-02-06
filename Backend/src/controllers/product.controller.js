@@ -7,6 +7,9 @@ import { asyncHandler } from '../utils/asyncHandler.js';
  * GET /api/products
  */
 export const getProducts = asyncHandler(async (req, res) => {
+  console.log('[Product Controller] getProducts called');
+  console.log('[Product Controller] Query params:', req.query);
+  
   const { category, limit, search, q } = req.query;
   
   const result = await productService.getAllProducts({ 
@@ -15,7 +18,10 @@ export const getProducts = asyncHandler(async (req, res) => {
     limit: limit ? parseInt(limit) : 20 
   });
 
+  console.log('[Product Controller] Service result:', { success: result.success, count: result.count });
+
   if (!result.success) {
+    console.error('[Product Controller] Service failed:', result.error);
     throw new ApiError(500, 'Failed to retrieve products');
   }
 

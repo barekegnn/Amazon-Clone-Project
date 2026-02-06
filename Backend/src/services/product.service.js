@@ -66,21 +66,29 @@ const productService = {
     try {
       const { category, search, limit: limitCount = 20, lastId = null } = options;
       
+      console.log('[Product Service] getAllProducts called with options:', options);
+      
       const productsRef = collection(db, 'products');
       
       // If searching, we fetch more to filter in memory (Firestore limitation workaround)
       // Otherwise we use the requested limit
       const fetchLimit = search ? 100 : limitCount;
       
+      console.log('[Product Service] Building query with fetchLimit:', fetchLimit);
+      
       let q = query(productsRef, orderBy('createdAt', 'desc'));
 
       if (category) {
         q = query(q, where('category', '==', category));
+        console.log('[Product Service] Filtering by category:', category);
       }
 
       q = query(q, limit(fetchLimit));
 
+      console.log('[Product Service] Executing Firestore query...');
       const querySnapshot = await getDocs(q);
+      console.log('[Product Service] Query completed, docs count:', querySnapshot.size);
+      
       let products = [];
 
       querySnapshot.forEach((doc) => {
@@ -97,15 +105,19 @@ const productService = {
           p.title?.toLowerCase().includes(lowerSearch) || 
           p.description?.toLowerCase().includes(lowerSearch)
         );
+        console.log('[Product Service] After search filter, products count:', products.length);
       }
 
+      console.log('[Product Service] Returning', products.length, 'products');
+      
       return {
         success: true,
         products,
         count: products.length,
       };
     } catch (error) {
-      console.error('Error getting products:', error);
+      console.error('[Product Service] Error getting products:', error);
+      console.error('[Product Service] Error stack:', error.stack);
       return {
         success: false,
         error: error.message,
