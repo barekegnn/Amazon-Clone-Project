@@ -361,6 +361,17 @@ const Home = () => {
                 <HeroCarousel />
                 
                 <div className="max-w-[1500px] mx-auto z-10 relative -mt-60 px-4 space-y-6">
+                    {/* Loading message for cold starts */}
+                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                        <div className="flex items-center gap-3">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                            <div>
+                                <p className="text-blue-800 font-medium">Loading your shopping experience...</p>
+                                <p className="text-blue-600 text-sm">This may take a moment on first visit while our servers start up.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
                     {/* Skeleton Row 1 */}
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                         {[1, 2, 3, 4].map(i => (
@@ -414,14 +425,26 @@ const Home = () => {
     if (error) {
         return (
             <div className="min-h-screen bg-gray-200 flex items-center justify-center">
-                <div className="text-center bg-white p-8 rounded-lg shadow-md">
+                <div className="text-center bg-white p-8 rounded-lg shadow-md max-w-md">
+                    <div className="mb-4">
+                        <svg className="mx-auto h-12 w-12 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                    <h2 className="text-xl font-bold text-gray-900 mb-2">Connection Issue</h2>
                     <p className="text-red-600 mb-4">{error}</p>
+                    <p className="text-sm text-gray-600 mb-6">
+                        This can happen when our servers are starting up. Please try again.
+                    </p>
                     <button 
                         onClick={() => window.location.reload()} 
-                        className="bg-amazonclone-yellow hover:bg-amazonclone-yellow-dark px-6 py-2 rounded"
+                        className="bg-amazonclone-yellow hover:bg-amazonclone-yellow-dark px-6 py-2 rounded font-medium transition-colors"
                     >
-                        Retry
+                        Try Again
                     </button>
+                    <p className="text-xs text-gray-500 mt-4">
+                        If the problem persists, please wait a moment and refresh the page.
+                    </p>
                 </div>
             </div>
         );

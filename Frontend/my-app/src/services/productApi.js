@@ -3,9 +3,9 @@ import { getAuthToken } from './authApi';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
 /**
- * Helper function to handle requests with retry logic
+ * Helper function to handle requests with retry logic and longer timeout for cold starts
  */
-async function request(endpoint, method = 'GET', body = null, requireAuth = false, retries = 1) {
+async function request(endpoint, method = 'GET', body = null, requireAuth = false, retries = 2) {
   const headers = {
     'Content-Type': 'application/json',
   };
@@ -20,8 +20,8 @@ async function request(endpoint, method = 'GET', body = null, requireAuth = fals
   const config = {
     method,
     headers,
-    // Add timeout for faster failure detection
-    signal: AbortSignal.timeout(15000), // 15 second timeout
+    // Longer timeout for cold starts (Render free tier)
+    signal: AbortSignal.timeout(45000), // 45 seconds for first request
   };
 
   if (body) {
@@ -49,20 +49,44 @@ async function request(endpoint, method = 'GET', body = null, requireAuth = fals
         throw error;
       }
       
-      // Don't retry on timeout errors - fail fast
+      // For timeout errors, retry with longer timeout
       if (error.name === 'TimeoutError' || error.name === 'AbortError') {
-        throw new Error('Request timed out. Please check your connection.');
+        if (attempt < retries) {
+          console.log(`Request timed out, retrying... (attempt ${attempt + 1}/${retries + 1})`);
+          // Increase timeout for retry attempts (cold start can be slow)
+          config.signal = AbortSignal.timeout(60000); // 60 seconds for retries
+          await new Promise(resolve => setTimeout(resolve, 2000)); // Wait 2 seconds before retry
+          continue;
+        } else {
+          throw new Error('Request timed out. The server may be starting up, please try again in a moment.');
+        }
       }
       
-      // Wait before retrying (shorter backoff for faster UX)
+      // Wait before retrying other errors
       if (attempt < retries) {
-        await new Promise(resolve => setTimeout(resolve, 500)); // 500ms instead of exponential
+        await new Promise(resolve => setTimeout(resolve, 1000));
       }
     }
   }
   
   // If all retries failed, throw the last error
   throw lastError;
+}
+
+/**
+ * Warmup function to wake up the backend server
+ */
+async function warmupBackend() {
+  try {
+    // Ping health endpoint to wake up server
+    await fetch(`${API_BASE_URL}/health`, {
+      method: 'GET',
+      signal: AbortSignal.timeout(5000) // Short timeout for warmup
+    });
+  } catch (error) {
+    // Ignore warmup errors - this is just to wake up the server
+    console.log('Backend warmup ping sent');
+  }
 }
 
 /**
@@ -79,6 +103,9 @@ export async function getProducts(params = {}) {
   const result = await request(`/api/products?${queryParams.toString()}`);
   return result.data;
 }
+
+// Warmup the backend when this module loads
+warmupBackend();
 
 /**
  * Get product by ID
